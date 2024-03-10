@@ -4,8 +4,6 @@
  */
 
 import axios from 'axios'
-import { getLocal } from '@/common/js/utils'
-import msg from "@/common/js/msg.jsx";
 import {App as MsgApp} from "antd";
 import {store} from "@/redux/store.js";
 
