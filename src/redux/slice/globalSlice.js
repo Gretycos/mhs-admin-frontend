@@ -7,8 +7,8 @@ import { createSlice } from '@reduxjs/toolkit'
 const globalSlice = createSlice({
     name: 'global',
     initialState: {
-        user_token: '',
-        user_id: ''
+        token: '',
+        userId: ''
     },
     reducers: {
         save(state, action) {

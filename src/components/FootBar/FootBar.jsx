@@ -3,12 +3,14 @@
  * time: 2024/2/5 14:29
  */
 import "./FootBar.less"
+import {Layout} from "antd";
+const {Footer} = Layout
 const FootBar = () => {
 
     return (
-        <div className="foot-bar">
+        <Footer className="foot-bar">
             This is footbar
-        </div>
+        </Footer>
     )
 }
 

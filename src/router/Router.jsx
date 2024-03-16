@@ -20,6 +20,7 @@ const router = createBrowserRouter([
         children: [
             {
                 path: "/home",
+                // element: <AuthGuard><Home/></AuthGuard> // 守卫，需要登录
                 element: <Home/>
             },
             {

@@ -2,13 +2,13 @@
  * author: Tsong
  * time: 09/03/2024 20:39
  */
-import {Navigate, useNavigate} from "react-router-dom";
+import {Navigate} from "react-router-dom";
 import {store} from "@/redux/store.js";
 import {App as MsgApp} from "antd";
 import {useEffect} from "react";
 
 const RouteGuard = (props) => {
-    const token = store.getState()?.globalSlice.user_token
+    const token = store.getState()?.globalSlice.token
     const {message} = MsgApp.useApp()
 
     // 防止多重渲染

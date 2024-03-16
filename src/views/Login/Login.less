@@ -1,0 +1,54 @@
+/**
+ * author: Tsong
+ * time: 16/03/2024 00:19
+ */
+@import "@/common/styles/custom-style.less";
+
+.login-page-content {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .ant-card-meta-detail{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .ant-card-meta-title{
+      width: 100%;
+      font-size: 32px;
+      font-style: italic;
+      color: white;
+      font-weight: bold;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0 5px 0 5px;
+      background-color: @mhs-color;
+      border-radius: 6px;
+    }
+  }
+}
+.login-form {
+  margin-top: 20px;
+  max-width: 400px;
+  .login-form-forgot {
+    float: right;
+    margin-top: 5px;
+  }
+  .ant-col-rtl {
+    float: left;
+  }
+  .login-form-button {
+    background-color: @mhs-color;
+    width: 100%;
+  }
+  .login-form-register {
+    margin-top: 5px;
+    float: right;
+  }
+  .ant-form-item{
+    height: 50px;
+  }
+}
+

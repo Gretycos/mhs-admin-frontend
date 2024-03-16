@@ -3,12 +3,14 @@
  * time: 2024/2/5 14:29
  */
 import "./TopBar.less"
+import {Layout} from "antd";
+const {Header} = Layout
 const TopBar = () => {
 
     return (
-        <div className="top-bar">
+        <Header className="top-bar">
             This is topbar
-        </div>
+        </Header>
     )
 }
 

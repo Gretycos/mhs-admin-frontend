@@ -1,33 +1,32 @@
 import './App.less'
-import Sider from "@/components/Sider/Sider.jsx";
-import {Outlet, useNavigate} from "react-router-dom";
+import SideBar from "@/components/Sider/SideBar.jsx";
+import {Outlet} from "react-router-dom";
 import TopBar from "@/components/TopBar/TopBar.jsx";
 import FootBar from "@/components/FootBar/FootBar.jsx";
-import {persistor, store} from "@/redux/store.js";
-import {PersistGate} from "redux-persist/integration/react";
-import { Provider } from 'react-redux'
+import {Layout} from "antd";
+const {Content} = Layout
 const App = () => {
     return (
-        <Provider store={store}>
-            <PersistGate persistor={persistor}>
-                <AppCore/>
-            </PersistGate>
-        </Provider>
-    )
-}
-
-const AppCore = () => {
-    return (
-        <div id="app" className="app">
-            <Sider/>
-            <div className="content">
+        // <div id="app" className="app">
+        //     <SideBar/>
+        //     <div className="content">
+        //         <TopBar/>
+        //         <div className="main">
+        //             <Outlet/>
+        //         </div>
+        //         <FootBar/>
+        //     </div>
+        // </div>
+        <Layout>
+            <SideBar/>
+            <Layout>
                 <TopBar/>
-                <div className="main">
+                <Content>
                     <Outlet/>
-                </div>
+                </Content>
                 <FootBar/>
-            </div>
-        </div>
+            </Layout>
+        </Layout>
     )
 }
 

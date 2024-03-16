@@ -2,11 +2,11 @@
  * author: Tsong
  * time: 2024/2/1 11:41
  */
-import {useState} from "react";
-import "./Sider.less";
+import "./SideBar.less";
 import {useLocation, useNavigate} from "react-router-dom";
 import {AppstoreOutlined, MailOutlined} from "@ant-design/icons";
-import {Menu} from "antd";
+import {Menu, Layout} from "antd";
+const {Sider} = Layout
 
 const getItem = (label, key, icon, children, type) => {
     return {
@@ -30,22 +30,24 @@ const items = [
     ]),
 ]
 
-const Sider = () => {
+const SideBar = () => {
     const navigate = useNavigate()
     const location = useLocation()
     const handleClick = ({key}) => {
         navigate(key)
     }
     return (
-        <Menu
-            className="sider"
-            onClick={handleClick}
-            defaultSelectedKeys={[location.pathname]}
-            defaultOpenKeys={items.map(it => it.key)}
-            mode="inline"
-            items={items}
-        />
+        <Sider className="sider" theme="light">
+            <div className="sider-logo" />
+            <Menu
+                onClick={handleClick}
+                defaultSelectedKeys={[location.pathname]}
+                defaultOpenKeys={items.map(it => it.key)}
+                mode="inline"
+                items={items}
+            />
+        </Sider>
     )
 }
 
-export default Sider
+export default SideBar

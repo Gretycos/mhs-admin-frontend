@@ -4,11 +4,10 @@
  */
 
 import axios from 'axios'
-import {App as MsgApp} from "antd";
 import {store} from "@/redux/store.js";
+import {message} from "antd";
 
 // console.log('import.meta.env', import.meta.env)
-const {message} = MsgApp.useApp()
 
 axios.defaults.baseURL = import.meta.env.MODE === 'development' ? '/api' : '/api'
 axios.defaults.withCredentials = true
