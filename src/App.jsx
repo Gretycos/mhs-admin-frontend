@@ -1,8 +1,8 @@
 import './App.less'
-import SideBar from "@/components/Sider/SideBar.jsx";
+import SideBar from "@/component/Sider/SideBar.jsx";
 import {Outlet} from "react-router-dom";
-import TopBar from "@/components/TopBar/TopBar.jsx";
-import FootBar from "@/components/FootBar/FootBar.jsx";
+import TopBar from "@/component/TopBar/TopBar.jsx";
+import FootBar from "@/component/FootBar/FootBar.jsx";
 import {Layout} from "antd";
 const {Content} = Layout
 const App = () => {

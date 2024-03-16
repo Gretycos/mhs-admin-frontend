@@ -3,11 +3,11 @@
  * time: 2024/2/5 14:21
  */
 import {createBrowserRouter, Navigate} from "react-router-dom";
-import Home from "@/views/Home/Home.jsx";
-import WorkShift from "@/views/WorkShift/WorkShift.jsx";
+import Home from "@/view/Home/Home.jsx";
+import WorkShift from "@/view/WorkShift/WorkShift.jsx";
 import AuthGuard from "@/router/RouteGuard.jsx"
 import App from "@/App.jsx";
-import Login from "@/views/Login/Login.jsx";
+import Login from "@/view/Login/Login.jsx";
 
 const router = createBrowserRouter([
     {
