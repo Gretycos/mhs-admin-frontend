@@ -6,7 +6,7 @@ import {App, Button, Card, Form, Input, Layout} from "antd";
 import {LockOutlined, UserOutlined} from "@ant-design/icons";
 import {useState} from "react";
 import {NavLink, useNavigate} from "react-router-dom";
-import {login} from "@/service/user-service/admin.js";
+import {login} from "@/service/user/admin.js";
 import {useDispatch} from "react-redux";
 import {save} from "@/redux/slice/globalSlice.js";
 import "./Login.less"

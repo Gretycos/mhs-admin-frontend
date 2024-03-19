@@ -12,8 +12,8 @@ import {message} from "antd";
 axios.defaults.baseURL = import.meta.env.MODE === 'development' ? '/api' : '/api'
 axios.defaults.withCredentials = true
 axios.defaults.headers['X-Requested-With'] = 'XMLHttpRequest'
-axios.defaults.headers['token'] = store.getState()?.globalSlice.user_token
-axios.defaults.headers['user-id'] = store.getState()?.globalSlice.user_id
+axios.defaults.headers['token'] = store.getState()?.globalSlice.token
+axios.defaults.headers['user-id'] = store.getState()?.globalSlice.userId
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 
 axios.interceptors.response.use(res => {
@@ -22,10 +22,9 @@ axios.interceptors.response.use(res => {
         return Promise.reject(res)
     }
     if (res.data.resultCode !== 200) {
+        message.error(res.data.message, 2)
         if (res.data.resultCode === 416) {
-            message.error(res.data.message, 2)
-        } else {
-            message.error(res.data.message, 2)
+            window.location.href = '/login'
         }
         return Promise.reject(res.data)
     }
