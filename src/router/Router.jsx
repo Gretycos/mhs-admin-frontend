@@ -2,36 +2,74 @@
  * author: Tsong
  * time: 2024/2/5 14:21
  */
-import {createBrowserRouter, Navigate} from "react-router-dom";
-import Home from "@/views/Home/Home.jsx";
+import { createBrowserRouter, Navigate } from "react-router-dom";
+import Home from "@/views/Home/Home";
 import WorkShift from "@/views/WorkShift/WorkShift.jsx";
-import AuthGuard from "@/router/RouteGuard.jsx"
+import AuthGuard from "@/router/RouteGuard.jsx";
 import App from "@/App.jsx";
 import Login from "@/views/Login/Login.jsx";
 
-const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <Navigate to="/home"/>
-    },
-    {
-        path: "/",
-        element: <App />,
-        children: [
-            {
-                path: "/home",
-                element: <Home/>
-            },
-            {
-                path: "/work-shift",
-                element: <AuthGuard><WorkShift/></AuthGuard>
-            }
-        ]
-    },
-    {
-        path: "/login",
-        element: <Login />
-    }
-])
+// import { Home, WorkShift, Login } from "@/src/pages";
+// import { Home.less, WorkShift.less, Login.less } from "@/src/styles";
+import { Request, RequestDetail } from "../views/Request/Request";
+import {
+  ManageEmployee,
+  EditEmployee,
+} from "../views/ManageEmployee/ManageEmployee";
+import { NoMatch } from "../views/NoMatch";
+import { Schedule } from "../views/Schedule/Schedule";
 
-export default router
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Navigate to="/home" />,
+  },
+  {
+    path: "/",
+    element: <App />,
+    children: [
+      {
+        path: "/home",
+        element: <Home />,
+      },
+      {
+        path: "/work-shift",
+        element: (
+          <AuthGuard>
+            <WorkShift />
+          </AuthGuard>
+        ),
+      },
+      {
+        path: "/request",
+        element: <Request />,
+      },
+      {
+        path: "/request/:id",
+        element: <RequestDetail />,
+      },
+      {
+        path: "*",
+        element: <NoMatch />,
+      },
+      {
+        path: "/manage-employee",
+        element: <ManageEmployee />,
+      },
+      {
+        path: "/manage-employee/edit/:id",
+        element: <EditEmployee />,
+      },
+      {
+        path: "/schedule",
+        element: <Schedule />,
+      },
+    ],
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+]);
+
+export default router;

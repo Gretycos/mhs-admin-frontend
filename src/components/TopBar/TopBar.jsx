@@ -2,14 +2,42 @@
  * author: Tsong
  * time: 2024/2/5 14:29
  */
-import "./TopBar.less"
+import "./TopBar.less";
+
+let data = [
+  {
+    key: "a",
+    title: "ALL STATUS",
+    link: "/test",
+  },
+  {
+    key: "b",
+    title: "EMERGENCY",
+    link: "/test",
+  },
+  {
+    key: "c",
+    title: "DRUG",
+    link: "/test",
+  },
+];
+
 const TopBar = () => {
-
+  const TitleList = data.map((arr) => {
     return (
-        <div className="top-bar">
-            This is topbar
-        </div>
-    )
-}
+      <a href={arr.link} key={arr.key} className="title">
+        {arr.title}
+      </a>
+    );
+  });
 
-export default TopBar
+  console.log(data, TitleList);
+  return (
+    <div className="top-bar">
+      {/* This is topbar */}
+      {TitleList}
+    </div>
+  );
+};
+
+export default TopBar;
