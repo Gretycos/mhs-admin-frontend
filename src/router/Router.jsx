@@ -8,6 +8,8 @@ import WorkShift from "@/view/WorkShift/WorkShift.jsx";
 import AuthGuard from "@/router/RouteGuard.jsx"
 import App from "@/App.jsx";
 import Login from "@/view/Login/Login.jsx";
+import ForgotPsw from "@/view/ForgotPsw/ForgotPsw.jsx";
+import ResetPsw from "@/view/ResetPsw/ResetPsw.jsx";
 
 const router = createBrowserRouter([
     {
@@ -32,7 +34,15 @@ const router = createBrowserRouter([
     {
         path: "/login",
         element: <Login />
-    }
+    },
+    {
+        path: "/forgot",
+        element: <ForgotPsw />
+    },
+    {
+        path: "/reset",
+        element: <ResetPsw />
+    },
 ])
 
 export default router

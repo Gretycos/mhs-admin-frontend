@@ -32,17 +32,17 @@ const Login = () => {
         email: [
             {
                 required: true,
-                message: 'Please input your Email!',
+                message: 'Please input your Email',
             },
             {
                 type: 'email',
-                message: 'The input is not valid Email!'
+                message: 'The input is not valid Email'
             }
         ],
         password: [
             {
                 required: true,
-                message: 'Please input your Password!',
+                message: 'Please input your Password',
             }
         ]
     }
@@ -77,6 +77,7 @@ const Login = () => {
                         name="email"
                         rules={rules.email}
                         validateTrigger="onBlur"
+                        validateFirst={true}
                     >
                         <Input prefix={<UserOutlined className="site-form-item-icon" />}
                                placeholder="Email"
@@ -93,17 +94,13 @@ const Login = () => {
                             type="password"
                             placeholder="Password"
                         />
-                        <NavLink to="/forgot-password" className="login-form-forgot">
-                            Forgot password
-                        </NavLink>
                     </Form.Item>
-
                     <Form.Item>
                         <Button type="primary" htmlType="submit" loading={loading} className="login-form-button">
                             Sign in
                         </Button>
-                        <NavLink to="/register" className="login-form-register">
-                            Don't have an account? Sign up here!
+                        <NavLink to="/forgot" className="login-form-forgot">
+                            Forgot password
                         </NavLink>
                     </Form.Item>
                 </Form>

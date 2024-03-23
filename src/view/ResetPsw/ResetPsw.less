@@ -1,10 +1,10 @@
 /**
  * author: Tsong
- * time: 16/03/2024 00:19
+ * time: 20/03/2024 13:57
  */
 @import "@/common/style/custom-style.less";
 
-.login-page-content {
+.reset-page-content {
   width: 100%;
   height: 100vh;
   display: flex;
@@ -28,23 +28,24 @@
     }
   }
 }
-.login-form {
+.reset-form {
   margin-top: 20px;
-  min-width: 400px;
-  .login-form-forgot {
+  min-width: 500px;
+  .reset-form-reset {
     float: left;
     margin-top: 5px;
   }
   .ant-col-rtl {
     float: left;
   }
-  .login-form-button {
+  .reset-form-button {
     background-color: @mhs-color;
     width: 100%;
   }
-  .login-form-register {
-    margin-top: 5px;
-    float: right;
+
+  .reset-form-item{
+    .ant-form-item-label {
+      width: 30%;
+    }
   }
 }
-

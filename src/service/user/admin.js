@@ -13,3 +13,11 @@ export const login = (params) => {
 export const logout = () => {
     return axios.delete(PREFIX + '/logout')
 }
+
+export const forgot = (params) => {
+    return axios.post(PREFIX + '/forgot', params)
+}
+
+export const reset = (params) => {
+    return axios.post(PREFIX + '/reset', params)
+}
