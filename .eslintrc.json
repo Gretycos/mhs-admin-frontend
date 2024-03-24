@@ -1,0 +1,18 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": "airbnb",
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+    },
+    "rules": {
+        "semi": false,
+        "eqeqeq": 0,
+        "tabWidth": 4,
+        "no-use-before-define": 1,
+        "indent": 1,
+    }
+}

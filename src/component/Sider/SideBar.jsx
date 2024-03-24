@@ -4,31 +4,38 @@
  */
 import "./SideBar.less";
 import {useLocation, useNavigate} from "react-router-dom";
-import {AppstoreOutlined, MailOutlined} from "@ant-design/icons";
 import {Menu, Layout} from "antd";
-const {Sider} = Layout
+import {
+  QuestionCircleOutlined,
+  MailOutlined,
+  FormOutlined,
+  ClockCircleOutlined,
+} from "@ant-design/icons";
 
+const { Sider } = Layout
 const getItem = (label, key, icon, children, type) => {
-    return {
-        key,
-        icon,
-        children,
-        label,
-        type
-    }
-}
+  return {
+    key,
+    icon,
+    children,
+    label,
+    type,
+  };
+};
 
 const items = [
-    getItem('Home', 'sub1', <MailOutlined />, [
-        getItem('Home', '/home'),
-    ]),
-    {
-        type: 'divider',
-    },
-    getItem('Practitioner', 'sub2', <AppstoreOutlined />, [
-        getItem('WorkShift', '/work-shift'),
-    ]),
-]
+  getItem("Home", "/home", <MailOutlined />),
+  {
+    type: "divider",
+  },
+  getItem("Register Request", "/request", <FormOutlined />),
+  getItem("Manage Employee", "sub2", <QuestionCircleOutlined />, [
+    getItem("View", "/manage-employee"),
+    getItem("Add", "/manage-employee/add"),
+    getItem("Edit", "/manage-employee/edit"),
+  ]),
+  getItem("Duty Schedule", "/schedule", <ClockCircleOutlined />),
+];
 
 const SideBar = () => {
     const navigate = useNavigate()

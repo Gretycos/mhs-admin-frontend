@@ -24,10 +24,10 @@ const App = () => {
                 <Content>
                     <Outlet/>
                 </Content>
-                <FootBar/>
+                {/* <FootBar/> */}
             </Layout>
         </Layout>
     )
 }
 
-export default App
+export default App;

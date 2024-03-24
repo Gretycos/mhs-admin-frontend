@@ -7,9 +7,17 @@
 .top-bar {
   height: 80px;
   width: 100%;
+  margin: 0 1em;
   display: flex;
-  justify-content: center; // 水平
+  justify-content: flex-start;
   align-items: center; // 垂直
-  background-color: dodgerblue;
   font-size: 24px;
+
+  .title{
+    margin-right: 0.5em;
+    color: #005EB8;
+    &:hover{
+      text-decoration: underline;
+    }
+  }
 }

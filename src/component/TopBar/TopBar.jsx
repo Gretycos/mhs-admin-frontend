@@ -3,15 +3,43 @@
  * time: 2024/2/5 14:29
  */
 import "./TopBar.less"
-import {Layout} from "antd";
-const {Header} = Layout
+import { Layout } from "antd";
+
+const { Header } = Layout
+
+let data = [
+  {
+    key: "a",
+    title: "ALL STATUS",
+    link: "/test",
+  },
+  {
+    key: "b",
+    title: "EMERGENCY",
+    link: "/test",
+  },
+  {
+    key: "c",
+    title: "DRUG",
+    link: "/test",
+  },
+];
+
 const TopBar = () => {
-
+  const TitleList = data.map((arr) => {
     return (
-        <Header className="top-bar">
-            This is topbar
-        </Header>
-    )
-}
+      <a href={arr.link} key={arr.key} className="title">
+        {arr.title}
+      </a>
+    );
+  });
 
-export default TopBar
+  console.log(data, TitleList);
+  return (
+      <Header className="top-bar">
+      {TitleList}
+      </Header>
+  );
+};
+
+export default TopBar;
