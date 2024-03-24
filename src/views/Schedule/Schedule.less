@@ -1,10 +1,47 @@
 .schedule-page{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     .title{
         display: block;
         border-bottom: #005EB8 2px solid;
         font-size: 20px;
         font-weight: 600;
-        color: #005EB8;    
+        color: #005EB8; 
     }
-    margin: 0 2em;
+    padding: 0 2em;
+    .date-picker{
+        width: fit-content;
+        margin-bottom: 1em;
+    }
+    .table-day{
+        display: block;
+        width: calc(80vw);
+    }
+    .overlay{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* 半透明黑色背景 */
+        z-index: 9998; /* 将遮罩层置于弹窗下面 */
+    }
+    .card{
+        .popup-card{
+            width: 300px;
+            position: fixed; /* 将弹窗固定在页面上 */
+            top: 50%; /* 垂直居中 */
+            left: 50%; /* 水平居中 */
+            transform: translate(-50%, -50%); /* 居中定位 */
+            z-index: 9999; /* 确保弹窗在顶部 */
+            .popup-card-content{
+            }
+            .popup-card-button{
+                margin: 0.5em 0;
+                float:right;
+            }
+        }
+    }
+    
 }

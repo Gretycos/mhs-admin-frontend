@@ -1,56 +1,57 @@
 import "./Schedule.less";
-import { Calendar, Badge, Select, Row, Col } from "antd";
+import { DatePicker, Table, Calendar, Button, Card } from "antd";
+import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import dayjs from "dayjs";
 
 const Schedule = () => {
-  const getListData = (value) => {
-    let listData;
-    switch (value.date()) {
-      case 8:
-        listData = [
-          { type: "warning", content: "This is warning event." },
-          { type: "success", content: "This is usual event." },
-        ];
-        break;
-      case 10:
-        listData = [
-          { type: "warning", content: "This is warning event." },
-          { type: "success", content: "This is usual event." },
-          { type: "error", content: "This is error event." },
-        ];
-        break;
-      case 15:
-        listData = [
-          { type: "warning", content: "This is warning event" },
-          { type: "success", content: "This is very long usual event......" },
-          { type: "error", content: "This is error event 1." },
-          { type: "error", content: "This is error event 2." },
-          { type: "error", content: "This is error event 3." },
-          { type: "error", content: "This is error event 4." },
-        ];
-        break;
-      default:
-    }
-    return listData || [];
-  };
+  const columns = [
+    {
+      title: "Employee Name",
+      width: 100,
+      dataIndex: "name",
+      key: "name",
+      fixed: "left",
+    },
+  ];
 
-  const dateCellRender = (value) => {
-    const listData = getListData(value);
-    return (
-      <ul className="events">
-        {listData.map((item) => (
-          <li key={item.content}>
-            <Badge status={item.type} text={item.content} />
-          </li>
-        ))}
-      </ul>
-    );
-  };
+  for (let i = 8; i < 25; i++) {
+    columns.push({
+      title: `${i - 1}:00`,
+      width: 100,
+      dataIndex: `hour${i - 1}`,
+      key: `hour${i - 1}`,
+      onCell: (record) => {
+        // console.log("record:", record);
+        return {
+          style: {
+            backgroundColor: record[`hour${i - 1}`] ? "#2e79ba" : "#ececec", //判断单元格的值,来显示背景颜色
+            color: "white", //单元格文字颜色
+          },
+        };
+      },
+    });
+  }
+  columns.push({
+    title: "Action",
+    key: "operation",
+    fixed: "right",
+    width: 100,
+    render: (text) => (
+      <Link to={`/schedule/${text.userid}`}>{text.userid}</Link>
+    ),
+  });
 
-  const cellRender = (current, info) => {
-    if (info.type === "date") return dateCellRender(current);
-    return info.originNode;
-  };
+  const userData = [];
+  for (let i = 0; i < 100; i++) {
+    userData.push({
+      key: i,
+      name: `Edward ${i}`,
+      hour10: true,
+      address: `London Park no. ${i}`,
+      userid: "P01234x",
+    });
+  }
 
   const now = dayjs();
   const start = now.subtract(7, "day");
@@ -58,103 +59,140 @@ const Schedule = () => {
 
   return (
     <div className="schedule-page">
-      <p className="title">Duty Schedule</p>
-      <Calendar
-        className="calendar"
-        cellRender={cellRender}
-        validRange={[start, end]}
-        headerRender={({ value, type, onChange, onTypeChange }) => {
-          const start = 0;
-          const end = 12;
-          const monthOptions = [];
-
-          const current = value.clone();
-          const localeData = value.localeData();
-          const months = [];
-
-          const month = value.month();
-          const year = value.year();
-
-          const optionsMonth = [];
-          const optionsYear = [];
-
-          for (let i = 2019; i < year + 5; i++) {
-            //我这里是需要最前2019年，所以设置2019
-            optionsYear.push(
-              <Select.Option key={i} value={i} className="year-item">
-                {i}
-              </Select.Option>
-            );
-          }
-
-          for (let i = 0; i < 12; i++) {
-            current.month(i);
-            months.push(localeData.monthsShort(current));
-            optionsMonth.push(
-              <Select.Option key={i} value={i} className="month-item">
-                {months[i]}
-              </Select.Option>
-            );
-          }
-
-          /* 上个月 可直接调用 */
-          const prev = () => {
-            let newMonth = now.subtract(1, "month");
-            onChange(newMonth);
-          };
-
-          /* 下个月 可直接调用 */
-          const next = () => {
-            let newMonth = now.add(1, "month");
-            onChange(newMonth);
-          };
-
-          /* 今天 */
-          const showTotay = () => {
-            let today = now;
-            onChange(today);
-            console.log(1);
-          };
-
-          return (
-            <div style={{ padding: 10 }}>
-              <Row type="flex" justify="space-between">
-                <Col>
-                  <Select
-                    size="small"
-                    className="year-select"
-                    onChange={(newYear) => {
-                      onChange(value.clone().year(newYear));
-                    }}
-                    value={year}
-                  >
-                    {optionsYear}
-                  </Select>
-                </Col>
-                <Col>
-                  <Select
-                    size="small"
-                    className="month-select"
-                    onChange={(newMonth) => {
-                      onChange(value.clone().month(newMonth));
-                    }}
-                    value={month}
-                  >
-                    {optionsMonth}
-                  </Select>
-                </Col>
-                <div>
-                  <span onClick={prev}>left</span>
-                  <span onClick={showTotay}>Today</span>
-                  <span onClick={next}>Next</span>
-                </div>
-              </Row>
-            </div>
-          );
-        }}
+      <p className="title">Day Schedule</p>
+      <DatePicker className="date-picker" defaultvalue={now} />
+      <Table
+        className="table-day"
+        columns={columns}
+        dataSource={userData}
+        scroll={{ x: 300, y: 300 }}
       />
     </div>
   );
 };
 
-export { Schedule };
+const PersonalSchedule = () => {
+  // an example of schedule data
+  const initialSchedule = [
+    {
+      id: 1,
+      day: "2024-03-22",
+      time: ["9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM"],
+    },
+    {
+      id: 2,
+      day: "2024-03-21",
+      time: ["9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM"],
+    },
+    {
+      id: 3,
+      day: "2024-03-20",
+      time: ["9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM"],
+    },
+    {
+      id: 4,
+      day: "2024-03-19",
+      time: ["9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM"],
+    },
+    {
+      id: 5,
+      day: "2024-03-18",
+      time: ["9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM"],
+    },
+  ];
+
+  const getListData = (value) => {
+    let listData;
+    switch (value.date()) {
+      case 1:
+      case 8:
+        listData = [{ type: "working day" }];
+        break;
+      case 10:
+      case 11:
+        listData = [{ type: "off day" }];
+        break;
+      case 12:
+      case 15:
+        listData = [{ type: "working day" }];
+        break;
+      default:
+      // listData = [{ type: "off day" }];
+    }
+    return listData || [];
+  };
+
+  const [schedule, setSchedule] = useState(initialSchedule);
+  const [selectDay, setSelectDay] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
+  useEffect(() => {
+    console.log("selectDay:", selectDay);
+    console.log("showPopup:", showPopup);
+  }, [selectDay, showPopup]);
+
+  const handlePopupClose = () => {
+    setShowPopup(false);
+  };
+
+  const cellRender = (current) => {
+    const listData = getListData(current);
+
+    const handleEditSchedule = () => {
+      // 这里可以显示一个弹窗，供用户编辑工作时间表
+      // 这里简化为在控制台中打印一条消息
+      // console.log("edit schedule");
+      setSelectDay(current.format("YYYY-MM-DD"));
+      setShowPopup(true);
+    };
+
+    return (
+      <div>
+        {listData.map((item, index) => (
+          <Button
+            key={index}
+            type={item.type === "working day" ? "primary" : "dashed"}
+            onClick={() => handleEditSchedule()}
+          >
+            {item.type}
+          </Button>
+        ))}
+      </div>
+    );
+  };
+
+  return (
+    <div className="schedule-page">
+      <p className="title">Personal Schedule</p>
+      <Calendar cellRender={cellRender} />
+      {showPopup && (
+        <>
+          <div className="overlay"></div>
+          <div className="card">
+            <Card
+              className="popup-card"
+              type="inner"
+              title="Work hour"
+              extra={<Link to="#">Edit</Link>}
+            >
+              <div className="popup-card-content">
+                <ul>
+                  <li>07:00-11:00</li>
+                  <li>12:30-18:30</li>
+                </ul>
+              </div>
+
+              <Button
+                onClick={() => handlePopupClose()}
+                className="popup-card-button"
+              >
+                Close
+              </Button>
+            </Card>
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
+export { Schedule, PersonalSchedule };

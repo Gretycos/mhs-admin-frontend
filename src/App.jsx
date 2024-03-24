@@ -21,7 +21,7 @@ const AppCore = () => {
     <div id="app" className="app">
       <Sider />
       <div className="content">
-        <TopBar />
+        {/* <TopBar /> */}
         <div className="main">
           <Outlet />
         </div>

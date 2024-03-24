@@ -8,16 +8,14 @@ import WorkShift from "@/views/WorkShift/WorkShift.jsx";
 import AuthGuard from "@/router/RouteGuard.jsx";
 import App from "@/App.jsx";
 import Login from "@/views/Login/Login.jsx";
-
-// import { Home, WorkShift, Login } from "@/src/pages";
-// import { Home.less, WorkShift.less, Login.less } from "@/src/styles";
 import { Request, RequestDetail } from "../views/Request/Request";
 import {
   ManageEmployee,
   EditEmployee,
+  AddEmployee,
 } from "../views/ManageEmployee/ManageEmployee";
 import { NoMatch } from "../views/NoMatch";
-import { Schedule } from "../views/Schedule/Schedule";
+import { Schedule, PersonalSchedule } from "../views/Schedule/Schedule";
 
 const router = createBrowserRouter([
   {
@@ -61,8 +59,16 @@ const router = createBrowserRouter([
         element: <EditEmployee />,
       },
       {
+        path: "/manage-employee/add",
+        element: <AddEmployee />,
+      },
+      {
         path: "/schedule",
         element: <Schedule />,
+      },
+      {
+        path: "/schedule/:id",
+        element: <PersonalSchedule />,
       },
     ],
   },
