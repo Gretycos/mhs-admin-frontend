@@ -28,7 +28,7 @@ const items = [
   {
     type: "divider",
   },
-  getItem("Register Request", "/Request", <FormOutlined />),
+  getItem("Register Request", "/request", <FormOutlined />),
   getItem("Manage Employee", "sub2", <QuestionCircleOutlined />, [
     getItem("View", "/manage-employee"),
     getItem("Add", "/manage-employee/add"),
