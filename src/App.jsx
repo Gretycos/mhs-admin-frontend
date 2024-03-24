@@ -24,7 +24,7 @@ const App = () => {
                 <Content>
                     <Outlet/>
                 </Content>
-                <FootBar/>
+                {/* <FootBar/> */}
             </Layout>
         </Layout>
     )

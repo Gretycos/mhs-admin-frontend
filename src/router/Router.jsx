@@ -10,14 +10,14 @@ import App from "@/App.jsx";
 import Login from "@/view/Login/Login.jsx";
 import ForgotPsw from "@/view/ForgotPsw/ForgotPsw.jsx";
 import ResetPsw from "@/view/ResetPsw/ResetPsw.jsx";
-import { Request, RequestDetail } from "../views/Request/Request";
+import { Request, RequestDetail } from "@/view/Request/Request";
 import {
   ManageEmployee,
   EditEmployee,
   AddEmployee,
-} from "../views/ManageEmployee/ManageEmployee";
-import { NoMatch } from "../views/NoMatch";
-import { Schedule, PersonalSchedule } from "../views/Schedule/Schedule";
+} from "@/view/ManageEmployee/ManageEmployee";
+import { NoMatch } from "@/view/NoMatch";
+import { Schedule, PersonalSchedule } from "@/view/Schedule/Schedule";
 
 const router = createBrowserRouter([
   {
