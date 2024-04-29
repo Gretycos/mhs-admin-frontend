@@ -1,9 +1,8 @@
 import "./Request.less";
-import { Table } from "antd";
+import { Table, Button } from "antd";
 import { Link } from "react-router-dom";
-
+import IntroBar from "@/component/IntroBar/IntroBar.jsx";
 const status = ["Complete", "Ongoing", "Pause"];
-const type = ["Emergency", "Drug", "Examination", "Operation"];
 
 const dataSource = [
   {
@@ -12,7 +11,6 @@ const dataSource = [
     name: "Jessica Williams",
     s_time: "2024-03-15 10:46",
     e_time: "2024-03-15 11:46",
-    type: type[0],
     sta: status[0],
   },
   {
@@ -21,7 +19,6 @@ const dataSource = [
     name: "James Miller",
     s_time: "2024-03-15 10:46",
     e_time: "-",
-    type: type[1],
     sta: status[1],
   },
   {
@@ -30,7 +27,6 @@ const dataSource = [
     name: "James Miller",
     s_time: "2024-03-15 10:46",
     e_time: "-",
-    type: type[1],
     sta: status[1],
   },
   {
@@ -39,7 +35,6 @@ const dataSource = [
     name: "James Miller",
     s_time: "2024-03-15 10:46",
     e_time: "-",
-    type: type[1],
     sta: status[1],
   },
   {
@@ -48,7 +43,6 @@ const dataSource = [
     name: "James Miller",
     s_time: "2024-03-15 10:46",
     e_time: "-",
-    type: type[1],
     sta: status[1],
   },
 ];
@@ -62,10 +56,6 @@ const columns = [
   {
     title: "Patient Name",
     dataIndex: "name",
-  },
-  {
-    title: "Type",
-    dataIndex: "type",
   },
   {
     title: "Start Time",
@@ -84,7 +74,7 @@ const columns = [
 const Request = () => {
   return (
     <div className={"table-div"}>
-      <p>Patient Register</p>
+      <IntroBar title="Patient Register"/>
       <Table dataSource={dataSource} columns={columns} />
     </div>
   );
@@ -93,24 +83,21 @@ const Request = () => {
 const detailData = {
   title: "PX102222Q",
   key: 1,
-  name: "Jessica Williams",
-  age: 32,
-  doctor: "Dr. John",
-  start_time: "2024-03-15 10:46",
-  end_time: "2024-03-15 11:46",
-  type: "Emergency",
-  status: "Complete",
-  location: `SO17 1BJ. University Health Service. 
-  Building 48, University of Southampton.`,
+  last_name: "Jessica",
+  first_name: "Williams",
+  birth: "1996-03-15",
+  email: "abc123@gmail.com",
+  gender: "female",
   description: `Every day's a blur
   Sometimes I can't tell what day it is
   Don't know what day it is
   Can you tell me what day it is?`,
-  suggestion: `I'm a Ferrari pulled off on Mulholland Drive
-  Over the city, the lights are so pretty from up here
-  I'm a Ferrari (I'm a Ferrari) and after the party's done
-  I keep on going, missing the moments
-  Living in the fast lane's getting kinda lonely.`,
+  address: "ABC12 Mulholland Drive",
+  // suggestion: `I'm a Ferrari pulled off on Mulholland Drive
+  // Over the city, the lights are so pretty from up here
+  // I'm a Ferrari (I'm a Ferrari) and after the party's done
+  // I keep on going, missing the moments
+  // Living in the fast lane's getting kinda lonely.`,
 };
 
 const RequestDetail = () => {
@@ -122,40 +109,40 @@ const RequestDetail = () => {
       <div className="form-list">
         <div className="detail">
           <p className="item-txt">
-            <span>Start Time: </span>
-            {detailData.start_time}
+            <span>First Name: </span>
+            {detailData.first_name}
           </p>
           <p className="item-txt">
-            <span>Patient: </span>
-            {detailData.name}
+            <span>Last Name: </span>
+            {detailData.last_name}
           </p>
           <p className="item-txt">
-            <span>Type: </span>
-            {detailData.type}
+            <span>Date of Birth: </span>
+            {detailData.birth}
           </p>
           <p className="item-txt">
-            <span>Location: </span>
-            {detailData.location}
+            <span>Gender: </span>
+            {detailData.gender}
           </p>
-          <span>Problem description: </span>
+          <p className="item-txt">
+            <span>Email: </span>
+            {detailData.email}
+          </p>
+          <p className="item-txt">
+            <span>Address: </span>
+            {detailData.address}
+          </p>
+          <span>User description: </span>
           <div className="typo-txt">{detailData.description}</div>
         </div>
 
-        <div className="detail">
-          <p className="item-txt">
-            <span>End Tine:</span>
-            {detailData.end_time}
-          </p>
-          <p className="item-txt">
-            <span>Doctor: </span>
-            {detailData.doctor}
-          </p>
-          <p className="item-txt">
-            <span>Status: </span>
-            {detailData.status}
-          </p>
-          <span>Doctor Suggestion: </span>
-          <div className="typo-txt">{detailData.suggestion}</div>
+        <div className="check">
+          <Button type="default" className="btn">
+            Reject
+          </Button>
+          <Button type="primary" className="btn">
+            Confirm
+          </Button>
         </div>
       </div>
     </div>

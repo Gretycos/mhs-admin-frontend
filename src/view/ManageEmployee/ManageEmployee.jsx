@@ -15,6 +15,7 @@ import { Link } from "react-router-dom";
 import dayjs from "dayjs";
 import React, { useState } from "react";
 import { UploadOutlined } from "@ant-design/icons";
+import IntroBar from "@/component/IntroBar/IntroBar.jsx";
 const { Column, ColumnGroup } = Table;
 const dateFormat = "YYYY-MM-DD";
 
@@ -54,7 +55,7 @@ const data = [
 const ManageEmployee = () => {
   return (
     <div className="manage-page">
-      <p className="title">View all employees</p>
+      <IntroBar title="View All Employee" />
       <Table dataSource={data} className="table">
         <ColumnGroup title="Name">
           <Column title="First Name" dataIndex="firstName" key="firstName" />
@@ -131,7 +132,7 @@ const EditEmployee = () => {
 
   return (
     <div className="edit-page">
-      <div className="employee-img">image</div>
+      {/* <div className="employee-img">image</div> */}
       <div>
         <Form
           {...layout}
@@ -331,13 +332,12 @@ const AddEmployee = () => {
 
   return (
     <div className="add-page">
-      <p className="title">Add new employee</p>
+      <p className="title">Add New employee</p>
       {/* <div className="employee-img">image</div> */}
       <Form
         {...layout}
         name="nest-messages"
         onFinish={onFinish}
-        style={{ maxWidth: 800 }}
         className="employee-info"
         validateMessages={validateMessages}
       >
@@ -382,7 +382,7 @@ const AddEmployee = () => {
           </Form.Item>
           <Form.Item
             name={["user", "home-address"]}
-            label="Home Address"
+            label="Address"
             initialValue={dataEdit.address}
           >
             <Input.TextArea />
@@ -390,11 +390,8 @@ const AddEmployee = () => {
         </div>
 
         <div className="btn-group">
-          <Form.Item
-            wrapperCol={{ ...layout.wrapperCol, offset: 8 }}
-            className="btn"
-          >
-            <ImageUpload />
+          <Form.Item wrapperCol={{ ...layout.wrapperCol }} className="btn">
+            {/* <ImageUpload /> */}
             <Button type="primary" htmlType="submit" className="btn-add">
               Add employee
             </Button>

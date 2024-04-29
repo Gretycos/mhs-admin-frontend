@@ -2,28 +2,34 @@
  * author: Tsong
  * time: 2024/2/5 14:29
  */
-import "./TopBar.less"
-import { Layout } from "antd";
+import "./TopBar.less";
+import { UserOutlined } from "@ant-design/icons";
+import { Layout, Avatar } from "antd";
 
-const { Header } = Layout
+const { Header } = Layout;
 
 let data = [
   {
     key: "a",
-    title: "ALL STATUS",
+    title: "test1",
     link: "/test",
   },
   {
     key: "b",
-    title: "EMERGENCY",
+    title: "test2",
     link: "/test",
   },
   {
     key: "c",
-    title: "DRUG",
+    title: "test3",
     link: "/test",
   },
 ];
+
+let userInfo = {
+  id: "1",
+  name: "admin",
+};
 
 const TopBar = () => {
   const TitleList = data.map((arr) => {
@@ -36,9 +42,13 @@ const TopBar = () => {
 
   console.log(data, TitleList);
   return (
-      <Header className="top-bar">
-      {TitleList}
-      </Header>
+    <Header className="top-bar">
+      {/* {TitleList} */}
+      <div className="user-info">
+        <span>Welcome, {userInfo.name}</span>
+      </div>
+      <Avatar icon={<UserOutlined /> } className="icon"/>
+    </Header>
   );
 };
 

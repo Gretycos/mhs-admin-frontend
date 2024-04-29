@@ -3,8 +3,8 @@
  * time: 2024/2/1 11:41
  */
 import "./SideBar.less";
-import {useLocation, useNavigate} from "react-router-dom";
-import {Menu, Layout} from "antd";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Menu, Layout } from "antd";
 import {
   QuestionCircleOutlined,
   MailOutlined,
@@ -12,7 +12,7 @@ import {
   ClockCircleOutlined,
 } from "@ant-design/icons";
 
-const { Sider } = Layout
+const { Sider } = Layout;
 const getItem = (label, key, icon, children, type) => {
   return {
     key,
@@ -30,31 +30,35 @@ const items = [
   },
   getItem("Register Request", "/request", <FormOutlined />),
   getItem("Manage Employee", "sub2", <QuestionCircleOutlined />, [
-    getItem("View", "/manage-employee"),
+    getItem("View | Edit | Delete", "/manage-employee"),
     getItem("Add", "/manage-employee/add"),
-    getItem("Edit", "/manage-employee/edit"),
+    // getItem("Edit", "/manage-employee/edit"),
   ]),
-  getItem("Duty Schedule", "/schedule", <ClockCircleOutlined />),
+  getItem("Duty Schedule", "sub3", <ClockCircleOutlined />, [
+    getItem("View", "/schedule"),
+    getItem("Add", "/manage-employee/add"),
+  ]),
 ];
 
 const SideBar = () => {
-    const navigate = useNavigate()
-    const location = useLocation()
-    const handleClick = ({key}) => {
-        navigate(key)
-    }
-    return (
-        <Sider className="sider" theme="light">
-            <div className="sider-logo" />
-            <Menu
-                onClick={handleClick}
-                defaultSelectedKeys={[location.pathname]}
-                defaultOpenKeys={items.map(it => it.key)}
-                mode="inline"
-                items={items}
-            />
-        </Sider>
-    )
-}
+  const navigate = useNavigate();
+  const location = useLocation();
+  const handleClick = ({ key }) => {
+    navigate(key);
+  };
+  return (
+    <Sider className="sider" theme="light">
+      <div className="sider-logo" />
+      <Menu
+        onClick={handleClick}
+        defaultSelectedKeys={[location.pathname]}
+        defaultOpenKeys={items.map((it) => it.key)}
+        mode="inline"
+        items={items}
+        className="sider-item"
+      />
+    </Sider>
+  );
+};
 
-export default SideBar
+export default SideBar;
