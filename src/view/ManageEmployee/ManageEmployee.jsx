@@ -332,7 +332,7 @@ const AddEmployee = () => {
 
   return (
     <div className="add-page">
-      <p className="title">Add New employee</p>
+      <p className="title">Add New Employee</p>
       {/* <div className="employee-img">image</div> */}
       <Form
         {...layout}

@@ -1,5 +1,6 @@
 import "./Schedule.less";
 import { DatePicker, Table, Calendar, Button, Card } from "antd";
+import IntroBar from "@/component/IntroBar/IntroBar.jsx";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import dayjs from "dayjs";
@@ -7,40 +8,72 @@ import dayjs from "dayjs";
 const Schedule = () => {
   const columns = [
     {
-      title: "Employee Name",
-      width: 100,
+      title: "Name",
+      width: 200,
       dataIndex: "name",
       key: "name",
       fixed: "left",
     },
   ];
 
-  for (let i = 8; i < 25; i++) {
-    columns.push({
-      title: `${i - 1}:00`,
-      width: 100,
-      dataIndex: `hour${i - 1}`,
-      key: `hour${i - 1}`,
-      onCell: (record) => {
-        // console.log("record:", record);
-        return {
-          style: {
-            backgroundColor: record[`hour${i - 1}`] ? "#2e79ba" : "#ececec", //判断单元格的值,来显示背景颜色
-            color: "white", //单元格文字颜色
-          },
-        };
+  columns.push(
+    {
+      title: `morning`,
+      width: "fit-content",
+      key: `morning`,
+      align: "center",
+      render: (record) =>
+        (record[`workShift`] === "morning") |
+        (record[`workShift`] === "allDay") ? (
+          <div className="custom-cell"></div>
+        ) : (
+          <></>
+        ),
+    },
+    {
+      title: `afternoon`,
+      width: "fit-content",
+      key: `afternoon`,
+      align: "center",
+      render: (record) =>
+        (record[`workShift`] === "afternoon") |
+        (record[`workShift`] === "allDay") ? (
+          <div className="custom-cell"></div>
+        ) : (
+          <></>
+        ),
+    },
+    {
+      title: `day off`,
+      width: "fit-content",
+      key: `dayOff`,
+      align: "center",
+      render: (record) =>
+        record[`workShift`] === "dayOff" ? (
+          <div className="custom-cell"></div>
+        ) : (
+          <></>
+        ),
+    },
+    {
+      title: `note`,
+      key: `note`,
+      width: 200,
+      align: "center",
+      render: (record) => {
+        return record[`note`];
       },
-    });
-  }
-  columns.push({
-    title: "Action",
-    key: "operation",
-    fixed: "right",
-    width: 100,
-    render: (text) => (
-      <Link to={`/schedule/${text.userid}`}>{text.userid}</Link>
-    ),
-  });
+    },
+    {
+      // title: "Edit | Delete",
+      key: "operation_edit",
+      width: 150,
+      fixed: "right",
+      render: (text) => (
+        <Link to={`/schedule/${text.userid}`}>Edit | Delete</Link>
+      ),
+    }
+  );
 
   const userData = [];
   for (let i = 0; i < 100; i++) {
@@ -50,6 +83,7 @@ const Schedule = () => {
       hour10: true,
       address: `London Park no. ${i}`,
       userid: "P01234x",
+      workShift: "allDay",
     });
   }
 
@@ -59,18 +93,14 @@ const Schedule = () => {
 
   return (
     <div className="schedule-page">
-      <p className="title">Day Schedule</p>
-      <DatePicker className="date-picker" defaultvalue={now} />
-      <Table
-        className="table-day"
-        columns={columns}
-        dataSource={userData}
-        scroll={{ x: 300, y: 300 }}
-      />
+      <IntroBar title="View All Schedule" />
+      <DatePicker className="date-picker" defaultValue={now} />
+      <Table className="table-day" columns={columns} dataSource={userData} />
     </div>
   );
 };
 
+// no-used code
 const PersonalSchedule = () => {
   // an example of schedule data
   const initialSchedule = [

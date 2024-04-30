@@ -17,7 +17,7 @@ import {
   AddEmployee,
 } from "@/view/ManageEmployee/ManageEmployee";
 import { NoMatch } from "@/view/NoMatch";
-import { Schedule, PersonalSchedule } from "@/view/Schedule/Schedule";
+import { Schedule } from "@/view/Schedule/Schedule";
 
 const router = createBrowserRouter([
   {
@@ -36,9 +36,9 @@ const router = createBrowserRouter([
       {
         path: "/work-shift",
         element: (
-          <AuthGuard>
-            <WorkShift />
-          </AuthGuard>
+          // <AuthGuard>
+          <WorkShift />
+          // </AuthGuard>
         ),
       },
       {
@@ -68,10 +68,6 @@ const router = createBrowserRouter([
       {
         path: "/schedule",
         element: <Schedule />,
-      },
-      {
-        path: "/schedule/:id",
-        element: <PersonalSchedule />,
       },
     ],
   },
