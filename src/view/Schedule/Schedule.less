@@ -2,13 +2,6 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    .title{
-        display: block;
-        border-bottom: #005EB8 2px solid;
-        font-size: 20px;
-        font-weight: 600;
-        color: #005EB8; 
-    }
     padding: 0 2em;
     .date-picker{
         width: fit-content;
@@ -16,7 +9,14 @@
     }
     .table-day{
         display: block;
-        width: calc(80vw);
+        width: fit-content;
+        .custom-cell{
+            // padding: 16px; /* 设置内边距，你可以根据需要调整这个值 */
+            width: 20px;
+            height: 20px;
+            border-radius: 20px;
+            background-color: #2e79baab;
+        }
     }
     .overlay{
         position: fixed;

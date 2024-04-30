@@ -34,10 +34,11 @@ const items = [
     getItem("Add", "/manage-employee/add"),
     // getItem("Edit", "/manage-employee/edit"),
   ]),
-  getItem("Duty Schedule", "sub3", <ClockCircleOutlined />, [
-    getItem("View", "/schedule"),
-    getItem("Add", "/manage-employee/add"),
+  getItem("Work shift", "sub3", <ClockCircleOutlined />, [
+    getItem("Daily Shift", "/schedule"),
+    getItem("Individual Shift", "/work-shift"),
   ]),
+  getItem("Logout", "/logout", <MailOutlined />),
 ];
 
 const SideBar = () => {
