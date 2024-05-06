@@ -1,3 +1,5 @@
+@import "@/common/style/custom-style.less";
+
 .work-shift{
     padding: 0 2em;
     .search-input{
@@ -12,6 +14,52 @@
             width: 300px;
             border: 1px solid #e8e7e7;
             border-radius: 5px;
+        }
+
+        .date-picker{
+
+        }
+
+        .list-event{
+            display: block;
+            height: 116px;
+            margin: 0 4px;
+            padding: 4px 8px;
+            color: rgba(0, 0, 0, 0.65);
+            text-align: left;
+            border-top: 2px solid #e8e7e7;
+            transition: background 0.3s;
+            .events{
+
+            }
+        }
+
+        .ant-picker-calendar-header{
+            label{
+                display: none;
+            }
+        }
+
+        .color{
+            margin-top: 10px;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            .circle{
+                border-radius: 50%;
+                width: 10px;
+                height: 10px;
+                margin: 3px 10px;
+            }
+            .green{
+                background-color: green;
+            }
+            .blue{
+                background-color: blue;
+            }
+            .orange{
+                background-color: orange;
+            }
         }
         
         .workday{
