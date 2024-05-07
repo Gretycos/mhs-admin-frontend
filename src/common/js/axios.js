@@ -40,6 +40,7 @@ axios.interceptors.response.use(res => {
 }, rej => {
     if (rej.response.status === 401){
         message.error("timeout", 2)
+        window.location.href = '/login'
     }
     console.log(rej.response)
     return Promise.reject(rej.response.statusText)

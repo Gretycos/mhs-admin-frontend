@@ -49,7 +49,7 @@ const Login = () => {
             email: values.email,
             password: md5(values.password)
         }
-        console.log(params)
+        // console.log(params)
         const {data} = await login(params)
         dispatch(save({ token: data.token }))
         dispatch(save({ adminId: data.userId }))

@@ -10,8 +10,8 @@ export const login = (params) => {
     return axios.post(PREFIX + '/login', params)
 }
 
-export const logout = () => {
-    return axios.delete(PREFIX + '/logout')
+export const logout = (params) => {
+    return axios.post(PREFIX + '/logout', params)
 }
 
 export const forgot = (params) => {

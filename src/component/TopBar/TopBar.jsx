@@ -42,18 +42,20 @@ const TopBar = () => {
     },
   ]
 
-    const onClickLoggedIn = (e) => {
+    const onClickLoggedIn = async (e) => {
         // console.log(e.key)
         // console.log(typeof e.key)
         if (e.key === "0") {
             // sign out
             const params = {
+                userId: store.getState()?.globalSlice.adminId,
                 token: store.getState()?.globalSlice.token
             }
-            logout(params)
+            console.log(params)
+            await logout(params)
             dispatch(save({ adminId: '' }))
             dispatch(save({ token: '' }))
-            navigate("/")
+            navigate("/login")
         }
     }
 
