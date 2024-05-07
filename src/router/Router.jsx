@@ -75,14 +75,14 @@ const router = createBrowserRouter([
     path: "/login",
     element: <Login />,
   },
-  {
-    path: "/forgot",
-    element: <ForgotPsw />,
-  },
-  {
-    path: "/reset",
-    element: <ResetPsw />,
-  },
+  // {
+  //   path: "/forgot",
+  //   element: <ForgotPsw />,
+  // },
+  // {
+  //   path: "/reset",
+  //   element: <ResetPsw />,
+  // },
 ]);
 
 export default router;

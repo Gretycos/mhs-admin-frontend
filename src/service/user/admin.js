@@ -21,3 +21,7 @@ export const forgot = (params) => {
 export const reset = (params) => {
     return axios.post(PREFIX + '/reset', params)
 }
+
+export const getAdminInfo = (params) => {
+    return axios.get(PREFIX + '/info', {params})
+}

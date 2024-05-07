@@ -9,12 +9,19 @@ import {message} from "antd";
 
 // console.log('import.meta.env', import.meta.env)
 
-axios.defaults.baseURL = import.meta.env.MODE === 'development' ? '/api' : '/api'
+axios.defaults.baseURL = import.meta.env.MODE === 'development' ? '/admin' : '/admin'
 axios.defaults.withCredentials = true
 axios.defaults.headers['X-Requested-With'] = 'XMLHttpRequest'
 axios.defaults.headers['token'] = store.getState()?.globalSlice.token
-axios.defaults.headers['user-id'] = store.getState()?.globalSlice.userId
+axios.defaults.headers['admin-id'] = store.getState()?.globalSlice.adminId
 axios.defaults.headers.post['Content-Type'] = 'application/json'
+
+axios.interceptors.request.use((config) => {
+    // console.log(store.getState())
+    config.headers['token'] = store.getState()?.globalSlice.token
+    config.headers['admin-id'] = store.getState()?.globalSlice.adminId
+    return config
+})
 
 axios.interceptors.response.use(res => {
     if (typeof res.data !== 'object') {

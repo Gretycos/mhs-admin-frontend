@@ -4,50 +4,77 @@
  */
 import "./TopBar.less";
 import { UserOutlined } from "@ant-design/icons";
-import { Layout, Avatar } from "antd";
+import {Layout, Avatar, Dropdown} from "antd";
+import {useEffect, useState} from "react";
+import {getAdminInfo, logout} from "@/service/user/admin.js";
+import {store} from "@/redux/store.js";
+import {useDispatch} from "react-redux";
+import {save} from "@/redux/slice/globalSlice.js";
+import {useNavigate} from "react-router-dom";
 
 const { Header } = Layout;
 
-let data = [
-  {
-    key: "a",
-    title: "test1",
-    link: "/test",
-  },
-  {
-    key: "b",
-    title: "test2",
-    link: "/test",
-  },
-  {
-    key: "c",
-    title: "test3",
-    link: "/test",
-  },
-];
-
-let userInfo = {
-  id: "1",
-  name: "admin",
-};
 
 const TopBar = () => {
-  const TitleList = data.map((arr) => {
-    return (
-      <a href={arr.link} key={arr.key} className="title">
-        {arr.title}
-      </a>
-    );
-  });
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const [fullName, setFullName] = useState("")
 
-  console.log(data, TitleList);
+    useEffect(() => {
+        getUserInfo()
+    }, []);
+
+    const getUserInfo = async () => {
+        // const userId = store.getState()?.globalSlice.userId
+        const {data} = await getAdminInfo()
+        const name = `${data.givenName} ${data.familyName == null ? "" : data.familyName}`
+        setFullName(name)
+    }
+
+  const dropdownItemsLoggedIn = [
+    {
+      key: '0',
+      label: (
+          <div className="top-bar-login-dropdown">
+            Sign out
+          </div>
+      ),
+    },
+  ]
+
+    const onClickLoggedIn = (e) => {
+        // console.log(e.key)
+        // console.log(typeof e.key)
+        if (e.key === "0") {
+            // sign out
+            const params = {
+                token: store.getState()?.globalSlice.token
+            }
+            logout(params)
+            dispatch(save({ adminId: '' }))
+            dispatch(save({ token: '' }))
+            navigate("/")
+        }
+    }
+
+
+  // console.log(data, TitleList);
   return (
     <Header className="top-bar">
-      {/* {TitleList} */}
-      <div className="user-info">
-        <span>Welcome, {userInfo.name}</span>
-      </div>
-      <Avatar icon={<UserOutlined /> } className="icon"/>
+        <Dropdown
+            menu={
+                {
+                    items: dropdownItemsLoggedIn,
+                    onClick: onClickLoggedIn,
+                }
+            }
+            placement="bottom"
+        >
+            <div className="top-bar-user-info">
+                <span>Welcome, {fullName}</span>
+                <Avatar icon={<UserOutlined/>} className="icon"/>
+            </div>
+        </Dropdown>
     </Header>
   );
 };

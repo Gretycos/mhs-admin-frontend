@@ -10,6 +10,8 @@ import {login} from "@/service/user/admin.js";
 import {useDispatch} from "react-redux";
 import {save} from "@/redux/slice/globalSlice.js";
 import "./Login.less"
+import md5 from "js-md5";
+
 const {Meta} = Card
 const Login = () => {
     const navigate = useNavigate()
@@ -18,14 +20,6 @@ const Login = () => {
 
     const [form] = Form.useForm()
     const [loading, setLoading] = useState(false)
-
-    // const validatePassword = async (_, value) => {
-    //     console.log(value.length)
-    //     if (value && value.length < 10){
-    //         return Promise.resolve()
-    //     }
-    //     return Promise.reject(new Error('The length of the password must be less than 10'))
-    // }
 
     // 表单规则
     const rules = {
@@ -49,14 +43,16 @@ const Login = () => {
 
     // 表单提交
     const onFinish = async values => {
-        console.log('Received values of form: ', values);
+        // console.log('Received values of form: ', values);
         setLoading(true)
         const params = {
             email: values.email,
-            password: values.password
+            password: md5(values.password)
         }
+        console.log(params)
         const {data} = await login(params)
         dispatch(save({ token: data.token }))
+        dispatch(save({ adminId: data.userId }))
         message.success('login succeeded', 2)
         // 回主页
         navigate('/')
@@ -99,9 +95,9 @@ const Login = () => {
                         <Button type="primary" htmlType="submit" loading={loading} className="login-form-button">
                             Sign in
                         </Button>
-                        <NavLink to="/forgot" className="login-form-forgot">
-                            Forgot password
-                        </NavLink>
+                        {/*<NavLink to="/forgot" className="login-form-forgot">*/}
+                        {/*    Forgot password*/}
+                        {/*</NavLink>*/}
                     </Form.Item>
                 </Form>
             </Card>
