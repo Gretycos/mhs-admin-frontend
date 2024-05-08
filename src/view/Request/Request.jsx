@@ -1,5 +1,6 @@
 import "./Request.less";
-import { Table, Button } from "antd";
+import { Table, Button, Input } from "antd";
+const { TextArea } = Input;
 import { Link } from "react-router-dom";
 import IntroBar from "@/component/IntroBar/IntroBar.jsx";
 const status = ["Complete", "Ongoing", "Pause"];
@@ -49,24 +50,24 @@ const dataSource = [
 
 const columns = [
   {
-    title: "Case ID",
-    dataIndex: "id",
-    render: (text) => <Link to={`/request/${text}`}>{text}</Link>,
-  },
-  {
     title: "Patient Name",
     dataIndex: "name",
+    width: 200,
+    render: (text) => <Link to={`/request/edit`}>{text}</Link>,
   },
   {
     title: "Start Time",
+    width: 200,
     dataIndex: "s_time",
   },
   {
     title: "End Time",
+    width: 200,
     dataIndex: "e_time",
   },
   {
     title: "Status",
+    width: 200,
     dataIndex: "sta",
   },
 ];
@@ -74,25 +75,28 @@ const columns = [
 const Request = () => {
   return (
     <div className={"table-div"}>
-      <IntroBar title="Patient Register"/>
-      <Table dataSource={dataSource} columns={columns} />
+      <IntroBar title="Patient Register" />
+      <Table
+        dataSource={dataSource}
+        columns={columns}
+        className="request-table"
+      />
     </div>
   );
 };
 
 const detailData = {
-  title: "PX102222Q",
   key: 1,
   last_name: "Jessica",
   first_name: "Williams",
   birth: "1996-03-15",
   email: "abc123@gmail.com",
   gender: "female",
-  description: `Every day's a blur
-  Sometimes I can't tell what day it is
-  Don't know what day it is
-  Can you tell me what day it is?`,
   address: "ABC12 Mulholland Drive",
+  city: "Southampton",
+  postcode: "SO15 2NP",
+  mobileNum: "1234567890",
+  dateOfBirth: "1996-03-15",
   // suggestion: `I'm a Ferrari pulled off on Mulholland Drive
   // Over the city, the lights are so pretty from up here
   // I'm a Ferrari (I'm a Ferrari) and after the party's done
@@ -105,7 +109,7 @@ const RequestDetail = () => {
 
   return (
     <div className="request-detail">
-      <p className="title">{detailData.title}</p>
+      <p className="title">Patient Register Details</p>
       <div className="form-list">
         <div className="detail">
           <p className="item-txt">
@@ -132,17 +136,43 @@ const RequestDetail = () => {
             <span>Address: </span>
             {detailData.address}
           </p>
-          <span>User description: </span>
-          <div className="typo-txt">{detailData.description}</div>
+          <p className="item-txt">
+            <span>City: </span>
+            {detailData.city}
+          </p>
+          <p className="item-txt">
+            <span>Post Code: </span>
+            {detailData.postcode}
+          </p>
+          <p className="item-txt">
+            <span>Mobile Number: </span>
+            {detailData.mobileNum}
+          </p>
+          <p className="item-txt">
+            <span>Birthday: </span>
+            {detailData.dateOfBirth}
+          </p>
+          {/* <span>User description: </span>
+          <div className="typo-txt">{detailData.description}</div> */}
         </div>
 
-        <div className="check">
-          <Button type="default" className="btn">
-            Reject
-          </Button>
-          <Button type="primary" className="btn">
-            Confirm
-          </Button>
+        <div className="reject-reason">
+          <TextArea
+            placeholder="Please enter the reason for rejection"
+            style={{
+              resize: "none",
+              width: 350,
+              height: 200,
+            }}
+          />
+          <div className="check">
+            <Button type="default" className="btn">
+              Reject
+            </Button>
+            <Button type="primary" className="btn">
+              Confirm
+            </Button>
+          </div>
         </div>
       </div>
     </div>

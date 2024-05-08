@@ -131,9 +131,10 @@ const EditEmployee = () => {
   };
 
   return (
-    <div className="edit-page">
+    <div className="manage-employee-page">
+      <IntroBar title="Edit | Delete Employee" />
       {/* <div className="employee-img">image</div> */}
-      <div>
+      <div className="edit-page">
         <Form
           {...layout}
           name="nest-messages"

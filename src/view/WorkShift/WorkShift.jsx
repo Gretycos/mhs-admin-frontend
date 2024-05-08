@@ -280,11 +280,11 @@ const WorkShift = () => {
           />
           <div className="color">
             <p className="green circle" />
-            <span>Available</span>
+            <span>Morning</span>
             <p className="blue circle"></p>
-            <span>Unavailable</span>
+            <span>Afternoon</span>
             <p className="orange circle"></p>
-            <span>Day Off</span>
+            <span>All Day</span>
           </div>
         </div>
 
