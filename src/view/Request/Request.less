@@ -1,22 +1,30 @@
  // background-color: aquamarine;
 .table-div{
     margin: 0 2em;
+    .request-table{
+        width: fit-content;
+    }
 }
 
 .request-detail{
     display: flex;
     flex-direction: column;
     margin: 0 2em;
-    width: 800px;
     height: 100vh;
+    width: 100vw;
     .form-list{
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
         .detail{
+            margin-left: 20px;
             width: 350px;
             span{
                 font-weight: 800;
+            }
+            p{
+                margin-top: 0;
+                margin-bottom: 1em;
             }
             .item-txt{}
             .typo-txt{
@@ -27,11 +35,16 @@
                 margin: 10px 0;
             }
         }
+        .reject-reason{
+            margin: 10px 30px;
+            
+        }
         .check{
             display: flex;
             flex-direction: row;
             align-items: flex-end;
-            margin-left: 100px;
+            justify-content: end;
+            margin-top: 30px;
             .btn{
                 margin-left: 1em;
             }

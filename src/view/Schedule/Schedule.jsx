@@ -8,7 +8,7 @@ import dayjs from "dayjs";
 const Schedule = () => {
   const columns = [
     {
-      title: "Name",
+      title: "Practitioner Name",
       width: 200,
       dataIndex: "name",
       key: "name",
@@ -19,12 +19,11 @@ const Schedule = () => {
   columns.push(
     {
       title: `morning`,
-      width: "fit-content",
+      width: "100px",
       key: `morning`,
-      align: "center",
+      align: "-webkit-center",
       render: (record) =>
-        (record[`workShift`] === "morning") |
-        (record[`workShift`] === "allDay") ? (
+        record[`workShift`] === "morning" ? (
           <div className="custom-cell"></div>
         ) : (
           <></>
@@ -32,12 +31,23 @@ const Schedule = () => {
     },
     {
       title: `afternoon`,
-      width: "fit-content",
+      width: "100px",
       key: `afternoon`,
-      align: "center",
+      align: "-webkit-center",
       render: (record) =>
-        (record[`workShift`] === "afternoon") |
-        (record[`workShift`] === "allDay") ? (
+        record[`workShift`] === "afternoon" ? (
+          <div className="custom-cell"></div>
+        ) : (
+          <></>
+        ),
+    },
+    {
+      title: `all day`,
+      width: "100px",
+      key: `AllDay`,
+      align: "-webkit-center",
+      render: (record) =>
+        record[`workShift`] === "allDay" ? (
           <div className="custom-cell"></div>
         ) : (
           <></>
@@ -45,34 +55,34 @@ const Schedule = () => {
     },
     {
       title: `day off`,
-      width: "fit-content",
+      width: "100px",
       key: `dayOff`,
-      align: "center",
+      align: "-webkit-center",
       render: (record) =>
         record[`workShift`] === "dayOff" ? (
           <div className="custom-cell"></div>
         ) : (
           <></>
         ),
-    },
-    {
-      title: `note`,
-      key: `note`,
-      width: 200,
-      align: "center",
-      render: (record) => {
-        return record[`note`];
-      },
-    },
-    {
-      // title: "Edit | Delete",
-      key: "operation_edit",
-      width: 150,
-      fixed: "right",
-      render: (text) => (
-        <Link to={`/schedule/${text.userid}`}>Edit | Delete</Link>
-      ),
     }
+    // {
+    //   title: `note`,
+    //   key: `note`,
+    //   width: 200,
+    //   align: "center",
+    //   render: (record) => {
+    //     return record[`note`];
+    //   },
+    // },
+    // {
+    //   // title: "Edit | Delete",
+    //   key: "operation_edit",
+    //   width: 150,
+    //   fixed: "right",
+    //   render: (text) => (
+    //     <Link to={`/schedule/${text.userid}`}>Edit | Delete</Link>
+    //   ),
+    // }
   );
 
   const userData = [];
