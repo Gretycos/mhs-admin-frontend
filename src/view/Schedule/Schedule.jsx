@@ -9,7 +9,6 @@ const Schedule = () => {
   const columns = [
     {
       title: "Practitioner Name",
-      width: 200,
       dataIndex: "name",
       key: "name",
       fixed: "left",
@@ -42,20 +41,8 @@ const Schedule = () => {
         ),
     },
     {
-      title: `all day`,
-      width: "100px",
-      key: `AllDay`,
-      align: "-webkit-center",
-      render: (record) =>
-        record[`workShift`] === "allDay" ? (
-          <div className="custom-cell"></div>
-        ) : (
-          <></>
-        ),
-    },
-    {
       title: `day off`,
-      width: "100px",
+      width: "200px",
       key: `dayOff`,
       align: "-webkit-center",
       render: (record) =>
@@ -65,24 +52,6 @@ const Schedule = () => {
           <></>
         ),
     }
-    // {
-    //   title: `note`,
-    //   key: `note`,
-    //   width: 200,
-    //   align: "center",
-    //   render: (record) => {
-    //     return record[`note`];
-    //   },
-    // },
-    // {
-    //   // title: "Edit | Delete",
-    //   key: "operation_edit",
-    //   width: 150,
-    //   fixed: "right",
-    //   render: (text) => (
-    //     <Link to={`/schedule/${text.userid}`}>Edit | Delete</Link>
-    //   ),
-    // }
   );
 
   const userData = [];
@@ -93,7 +62,7 @@ const Schedule = () => {
       hour10: true,
       address: `London Park no. ${i}`,
       userid: "P01234x",
-      workShift: "allDay",
+      workShift: "morning",
     });
   }
 

@@ -1,111 +1,146 @@
 import "./Request.less";
-import { Table, Button, Input } from "antd";
+import { Table, Button, Input, Modal } from "antd";
 const { TextArea } = Input;
-import { Link } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import IntroBar from "@/component/IntroBar/IntroBar.jsx";
 const status = ["Complete", "Ongoing", "Pause"];
-
-const dataSource = [
-  {
-    key: "1",
-    id: "req10214A",
-    name: "Jessica Williams",
-    s_time: "2024-03-15 10:46",
-    e_time: "2024-03-15 11:46",
-    sta: status[0],
-  },
-  {
-    key: "2",
-    id: "req10234W",
-    name: "James Miller",
-    s_time: "2024-03-15 10:46",
-    e_time: "-",
-    sta: status[1],
-  },
-  {
-    key: "3",
-    id: "req10294V",
-    name: "James Miller",
-    s_time: "2024-03-15 10:46",
-    e_time: "-",
-    sta: status[1],
-  },
-  {
-    key: "4",
-    id: "req10219S",
-    name: "James Miller",
-    s_time: "2024-03-15 10:46",
-    e_time: "-",
-    sta: status[1],
-  },
-  {
-    key: "5",
-    id: "req10210P",
-    name: "James Miller",
-    s_time: "2024-03-15 10:46",
-    e_time: "-",
-    sta: status[1],
-  },
-];
+import {
+  getRegisterPatients,
+  getRegisterPatientDetails,
+  rejectRegister,
+  approveRegister,
+} from "@/service/user/admin.js";
+import dayjs from "dayjs";
 
 const columns = [
   {
     title: "Patient Name",
     dataIndex: "name",
     width: 200,
-    render: (text) => <Link to={`/request/edit`}>{text}</Link>,
+    render: (text, record) => <Link to={`/request/${record.id}`}>{text}</Link>,
   },
   {
-    title: "Start Time",
+    title: "Email",
     width: 200,
-    dataIndex: "s_time",
+    dataIndex: "email",
   },
   {
-    title: "End Time",
-    width: 200,
-    dataIndex: "e_time",
+    title: "Gender",
+    width: 100,
+    dataIndex: "sex",
   },
   {
-    title: "Status",
+    title: "Date of Birth",
     width: 200,
-    dataIndex: "sta",
+    dataIndex: "birth",
   },
 ];
 
 const Request = () => {
+  const [reqList, setReqList] = useState([{}]);
+  const getRequestList = async () => {
+    const { data } = await getRegisterPatients({
+      state: 0, // 0: pending, 1: approved, 2: rejected
+    });
+    const extractedData = data.map((item) => ({
+      key: item.reqId,
+      id: item.reqId,
+      name: item.givenName + " " + item.familyName,
+      email: item.email,
+      sex: item.sex === 0 ? "female" : "male",
+      birth: dayjs(item.dateOfBirth).format("DD/MM/YYYY"),
+    }));
+    setReqList(extractedData);
+  };
+
+  useEffect(() => {
+    getRequestList();
+  }, []);
+
   return (
     <div className={"table-div"}>
       <IntroBar title="Patient Register" />
-      <Table
-        dataSource={dataSource}
-        columns={columns}
-        className="request-table"
-      />
+      <Table dataSource={reqList} columns={columns} className="request-table" />
     </div>
   );
 };
 
-const detailData = {
-  key: 1,
-  last_name: "Jessica",
-  first_name: "Williams",
-  birth: "1996-03-15",
-  email: "abc123@gmail.com",
-  gender: "female",
-  address: "ABC12 Mulholland Drive",
-  city: "Southampton",
-  postcode: "SO15 2NP",
-  mobileNum: "1234567890",
-  dateOfBirth: "1996-03-15",
-  // suggestion: `I'm a Ferrari pulled off on Mulholland Drive
-  // Over the city, the lights are so pretty from up here
-  // I'm a Ferrari (I'm a Ferrari) and after the party's done
-  // I keep on going, missing the moments
-  // Living in the fast lane's getting kinda lonely.`,
-};
-
 const RequestDetail = () => {
-  // 傳入的參數 id
+  const { id } = useParams(); // 傳入的參數 id
+  const [reqDetail, setReqDetail] = useState({
+    email: "",
+  });
+  const getRequestDetail = async () => {
+    const { data } = await getRegisterPatientDetails({
+      reqId: id,
+    });
+
+    setReqDetail(data);
+  };
+
+  useEffect(() => {
+    getRequestDetail();
+  }, []);
+
+  const rejectSubmit = async () => {
+    try {
+      if ((reqDetail.reason = null || reqDetail.reason === "")) {
+        Modal.error({
+          title: "Error",
+          content: "Please enter the reason for rejection",
+        });
+        return;
+      }
+      const response = await rejectRegister({
+        userId: parseInt(id),
+        name: reqDetail.givenName,
+        email: reqDetail.email,
+        reason: reqDetail.reason,
+      });
+      if (response.status === 200) {
+        Modal.success({
+          title: "Success",
+          content: "The operation was successful",
+          onOk: () => {
+            navigate("/");
+          },
+        });
+      }
+    } catch (error) {
+      Modal.error({
+        title: "Error",
+        content: error.message,
+      });
+    }
+  };
+
+  const approveSubmit = async () => {
+    try {
+      const params = {
+        userId: parseInt(id),
+        name: reqDetail.givenName,
+        email: reqDetail.email,
+      };
+      const response = await approveRegister({
+        params,
+      });
+      if (response.status === 200) {
+        Modal.success({
+          title: "Success",
+          content: "The operation was successful",
+          onOk: () => {
+            navigate("/");
+          },
+        });
+      }
+    } catch (error) {
+      Modal.error({
+        title: "Error",
+        content: error.message,
+      });
+    }
+  };
 
   return (
     <div className="request-detail">
@@ -113,44 +148,40 @@ const RequestDetail = () => {
       <div className="form-list">
         <div className="detail">
           <p className="item-txt">
-            <span>First Name: </span>
-            {detailData.first_name}
+            <span>Given Name: </span>
+            {reqDetail.givenName}
           </p>
           <p className="item-txt">
-            <span>Last Name: </span>
-            {detailData.last_name}
+            <span>Family Name: </span>
+            {reqDetail.familyName}
           </p>
           <p className="item-txt">
             <span>Date of Birth: </span>
-            {detailData.birth}
+            {dayjs(reqDetail.dayOfBirth).format("DD/MM/YYYY")}
           </p>
           <p className="item-txt">
             <span>Gender: </span>
-            {detailData.gender}
+            {reqDetail.sex === 0 ? "Female" : "Male"}
           </p>
           <p className="item-txt">
             <span>Email: </span>
-            {detailData.email}
+            {reqDetail.email}
           </p>
           <p className="item-txt">
             <span>Address: </span>
-            {detailData.address}
+            {reqDetail.addr1 + " " + (reqDetail.addr2 ? reqDetail.addr2 : "")}
           </p>
           <p className="item-txt">
             <span>City: </span>
-            {detailData.city}
+            {reqDetail.city}
           </p>
           <p className="item-txt">
             <span>Post Code: </span>
-            {detailData.postcode}
+            {reqDetail.postcode}
           </p>
           <p className="item-txt">
             <span>Mobile Number: </span>
-            {detailData.mobileNum}
-          </p>
-          <p className="item-txt">
-            <span>Birthday: </span>
-            {detailData.dateOfBirth}
+            {reqDetail.mobileNum ? reqDetail.mobileNum : "N/A"}
           </p>
           {/* <span>User description: </span>
           <div className="typo-txt">{detailData.description}</div> */}
@@ -164,12 +195,16 @@ const RequestDetail = () => {
               width: 350,
               height: 200,
             }}
+            onBlur={(e) => {
+              console.log("reason", e.target.value);
+              setReqDetail({ reason: e.target.value, ...reqDetail });
+            }}
           />
           <div className="check">
-            <Button type="default" className="btn">
+            <Button type="default" className="btn" onClick={rejectSubmit}>
               Reject
             </Button>
-            <Button type="primary" className="btn">
+            <Button type="primary" className="btn" onClick={approveSubmit}>
               Confirm
             </Button>
           </div>
