@@ -38,7 +38,7 @@ const items = [
     getItem("Daily Shift", "/schedule"),
     getItem("Individual Shift", "/work-shift"),
   ]),
-  getItem("Logout", "/logout", <MailOutlined />),
+  // getItem("Logout", "/logout", <MailOutlined />),
 ];
 
 const SideBar = () => {
