@@ -14,8 +14,10 @@ import {
   Select,
   Row,
   Col,
+  Modal,
 } from "antd";
 import dayjs from "dayjs";
+import { getEmployeeList, createWorkShift } from "@/service/user/admin.js";
 const { Search } = Input;
 
 const WorkShift = () => {
@@ -41,13 +43,13 @@ const WorkShift = () => {
   };
 
   const onSelectPractitioner = (value) => {
-    console.log("Select practitioner:", value);
     setSelectUser({
       user_id: value[0],
       user_name: value[1],
     });
   };
 
+  // Return the date for work.
   const getSetListData = () => {
     const listData = [
       {
@@ -87,18 +89,10 @@ const WorkShift = () => {
   };
 
   const setDay = useMemo(() => {
-    // 根据user_id查詢當前日期是否有排班
+    // Find if the user has a schedule on the day
     return (value) => {
       const dateString = dayjs(value.$d).format("YYYY-MM-DD");
       for (let item of listData) {
-        // console.log(
-        //   "item",
-        //   value.$d,
-        //   dateString,
-        //   item,
-        //   item.day === dateString,
-        //   item.type != 0
-        // );
         if (item.day === dateString) {
           switch (item.type) {
             case 1:
@@ -144,39 +138,13 @@ const WorkShift = () => {
     };
   }, [listData]);
 
-  const option = [
-    {
-      value: ["JB1", "James Bond"],
-      label: "James Bond",
-    },
-    {
-      value: ["TC2", "Tim Cook"],
-      label: "Tim Cook",
-    },
-    {
-      value: ["EM3", "Elon Musk"],
-      label: "Elon Musk",
-    },
-    {
-      value: ["JB4", "Jeff Bezos"],
-      label: "Jeff Bezos",
-    },
-    {
-      value: ["BG5", "Bill Gates"],
-      label: "Bill Gates",
-    },
-    {
-      value: ["LP6", "Larry Page"],
-      label: "Larry Page",
-    },
-  ];
-
   useEffect(() => {
     setListData(getSetListData());
     if (selectUser) {
       setSelectDate(dayjs(today));
-      setWorkTime(1); // Assuming `null` is the original state
+      setWorkTime(1);
     }
+    practitionerList();
   }, [selectUser]);
 
   const handleDateChange = (value) => {
@@ -192,6 +160,27 @@ const WorkShift = () => {
     console.log("handleDateChange", dayjs(value).format("YYYY-MM-DD"));
   };
 
+  const practitionerList = async () => {
+    const { data } = await getEmployeeList();
+    const options = data.map((item) => ({
+      value: [item.practId, item.givenName + " " + item.familyName],
+      label: item.givenName + " " + item.familyName,
+    }));
+    setOptions(options);
+    console.log("options", options);
+  };
+
+  const submitWorkShift = async () => {
+    const workShiftData = {
+      adminId: "m5x1utQt", // remember to change, should get from header
+      practId: selectUser.user_id,
+      workDate: dayjs(selectDate.$d).format("YYYY-MM-DD"),
+      shiftType: workTime,
+    };
+    await createWorkShift(workShiftData);
+    navigate("/schedule");
+  };
+
   return (
     <div className="work-shift">
       <IntroBar title="Add Individual Schedule" />
@@ -205,7 +194,7 @@ const WorkShift = () => {
             .toLowerCase()
             .localeCompare((optionB?.label ?? "").toLowerCase())
         }
-        options={option}
+        options={options}
         onSelect={onSelectPractitioner}
         value={selectUser.user_name ? selectUser.user_name : ""}
       />
@@ -349,6 +338,7 @@ const WorkShift = () => {
                     : true
                   : disabledDate
               }
+              onClick={() => submitWorkShift()}
             >
               Confirm
             </Button>

@@ -13,70 +13,77 @@ import {
 } from "antd";
 import { Link } from "react-router-dom";
 import dayjs from "dayjs";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { UploadOutlined } from "@ant-design/icons";
 import IntroBar from "@/component/IntroBar/IntroBar.jsx";
 const { Column, ColumnGroup } = Table;
+import { getEmployeeList } from "@/service/user/admin.js";
 const dateFormat = "YYYY-MM-DD";
 
-const data = [
+const columns = [
   {
-    key: "1",
-    firstName: "John",
-    lastName: "Brown",
-    address: "New York No. 1 Lake Park",
-    email: "jb32k@soton.mhs.uk",
-    phone: "07442933210",
-    position: "Doctor",
-    id: "jb1023w",
+    title: "Practitioner Name",
+    dataIndex: "name",
+    width: 200,
+    render: (text, record) => <Link to={`/request/${record.id}`}>{text}</Link>,
   },
   {
-    key: "2",
-    firstName: "Jim",
-    lastName: "Green",
-    address: "London No. 1 Lake Park",
-    email: "jg32i@soton.mhs.uk",
-    phone: "07442124532",
-    position: "Doctor",
-    id: "jb1013j",
+    title: "Email",
+    width: 200,
+    dataIndex: "email",
   },
   {
-    key: "3",
-    firstName: "Joe",
-    lastName: "Black",
-    address: "Sydney No. 1 Lake Park",
-    email: "jb32i@soton.mhs.uk",
-    phone: "07442993012",
-    position: "Nurse",
-    id: "jb1030rr",
+    title: "Gender",
+    width: 100,
+    dataIndex: "sex",
+  },
+  {
+    title: "Date of Birth",
+    width: 200,
+    dataIndex: "birth",
+  },
+  {
+    title: "Position",
+    width: 200,
+    dataIndex: "position",
   },
 ];
 
+const positionOption = {
+  0: "Doctor",
+  1: "Test",
+  2: "Nurse",
+  3: "Else",
+};
+
 const ManageEmployee = () => {
+  const [employeeList, setEmployeeList] = useState([{}]);
+  const employeeAll = async () => {
+    const { data } = await getEmployeeList({ state: 1 });
+    const extractedData = data.map((item) => ({
+      key: item.practId,
+      id: item.practId,
+      name: item.givenName + " " + item.familyName,
+      email: item.email,
+      sex: item.sex === 0 ? "female" : "male",
+      position: positionOption[item.role],
+      birth: dayjs(item.dateOfBirth).format("DD/MM/YYYY"),
+    }));
+    setEmployeeList(extractedData);
+  };
+
+  useEffect(() => {
+    employeeAll();
+  }, []);
+
   return (
     <div className="manage-page">
       <IntroBar title="View All Employee" />
-      <Table dataSource={data} className="table">
-        <ColumnGroup title="Name">
-          <Column title="First Name" dataIndex="firstName" key="firstName" />
-          <Column title="Last Name" dataIndex="lastName" key="lastName" />
-        </ColumnGroup>
-
-        <Column title="Email" dataIndex="email" key="email" />
-        <Column title="Phone" dataIndex="phone" key="phone" />
-        <Column title="Position" dataIndex="position" key="position" />
-        <Column
-          title="Action"
-          key="action"
-          render={(_, record) => (
-            <Space size="middle">
-              <Link to={`/manage-employee/edit/${record.id}`}>
-                Edit or Delete
-              </Link>
-            </Space>
-          )}
-        />
-      </Table>
+      <Table
+        dataSource={employeeList}
+        columns={columns}
+        className="table"
+      ></Table>
     </div>
   );
 };

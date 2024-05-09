@@ -92,7 +92,7 @@ const Home = () => {
         </Card>
       </div>
 
-      <Button onClick={handleAlert}>alert</Button>
+      {/* <Button onClick={handleAlert}>alert</Button> */}
     </div>
   );
 };
