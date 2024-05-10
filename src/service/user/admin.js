@@ -39,11 +39,11 @@ export const getRegisterPatientDetails = (params) => {
 }
 
 export const rejectRegister = (params) => {
-    return axios.put(PREFIX_REQ + '/reject', null, params)
+    return axios.put(PREFIX_REQ + '/reject', null, {params})
 }
 
 export const approveRegister = (params) => {
-    return axios.put(PREFIX_REQ + '/approve', null, params)
+    return axios.put(PREFIX_REQ + '/approve', null, {params})
 }
 
 // Manage Employee
@@ -56,11 +56,11 @@ export const getEmployeeList = (params) => {
 // Work Shift
 const PREFIX_SHIFT = '/workShift'
 export const createWorkShift = (params) => { 
-    return axios.post(PREFIX_EMP + '/add', params)
+    return axios.post(PREFIX_SHIFT + '/add',  params)
 }
 
 export const getDailyWorkShift = (params) => {
-    return axios.get(PREFIX_EMP + '/selectAll', {params})
+    return axios.get(PREFIX_SHIFT + '/personalWorkShift', {params})
 }
 
 

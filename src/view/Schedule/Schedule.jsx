@@ -147,9 +147,6 @@ const PersonalSchedule = () => {
     const listData = getListData(current);
 
     const handleEditSchedule = () => {
-      // 这里可以显示一个弹窗，供用户编辑工作时间表
-      // 这里简化为在控制台中打印一条消息
-      // console.log("edit schedule");
       setSelectDay(current.format("YYYY-MM-DD"));
       setShowPopup(true);
     };

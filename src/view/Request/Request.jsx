@@ -68,9 +68,7 @@ const Request = () => {
 
 const RequestDetail = () => {
   const { id } = useParams(); // 傳入的參數 id
-  const [reqDetail, setReqDetail] = useState({
-    email: "",
-  });
+  const [reqDetail, setReqDetail] = useState({});
   const getRequestDetail = async () => {
     const { data } = await getRegisterPatientDetails({
       reqId: id,
@@ -85,7 +83,10 @@ const RequestDetail = () => {
 
   const rejectSubmit = async () => {
     try {
-      if ((reqDetail.reason = null || reqDetail.reason === "")) {
+      if (
+        (reqDetail.reason =
+          null || reqDetail.reason === "" || reqDetail.reason === undefined)
+      ) {
         Modal.error({
           title: "Error",
           content: "Please enter the reason for rejection",
@@ -93,15 +94,15 @@ const RequestDetail = () => {
         return;
       }
       const response = await rejectRegister({
-        userId: parseInt(id),
+        reqId: reqDetail.reqId,
         name: reqDetail.givenName,
         email: reqDetail.email,
         reason: reqDetail.reason,
       });
-      if (response.status === 200) {
+      if (response.resultCode === 200) {
         Modal.success({
           title: "Success",
-          content: "The operation was successful",
+          content: "Reject submitted.",
           onOk: () => {
             navigate("/");
           },
@@ -115,20 +116,20 @@ const RequestDetail = () => {
     }
   };
 
+  const navigate = useNavigate();
+
   const approveSubmit = async () => {
     try {
-      const params = {
-        userId: parseInt(id),
+      const response = await approveRegister({
+        reqId: reqDetail.reqId,
         name: reqDetail.givenName,
         email: reqDetail.email,
-      };
-      const response = await approveRegister({
-        params,
       });
-      if (response.status === 200) {
+
+      if (response.resultCode === 200) {
         Modal.success({
           title: "Success",
-          content: "The operation was successful",
+          content: "Approve submitted.",
           onOk: () => {
             navigate("/");
           },
