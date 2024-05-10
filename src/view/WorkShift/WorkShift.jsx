@@ -3,8 +3,11 @@
  * time: 2024/2/5 14:32
  */
 import { useEffect, useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import "./WorkShift.less";
 import IntroBar from "@/component/IntroBar/IntroBar.jsx";
+import axios from "axios";
+import { store } from "@/redux/store.js";
 import {
   Input,
   Calendar,
@@ -17,7 +20,11 @@ import {
   Modal,
 } from "antd";
 import dayjs from "dayjs";
-import { getEmployeeList, createWorkShift } from "@/service/user/admin.js";
+import {
+  getEmployeeList,
+  createWorkShift,
+  getDailyWorkShift,
+} from "@/service/user/admin.js";
 const { Search } = Input;
 
 const WorkShift = () => {
@@ -47,54 +54,36 @@ const WorkShift = () => {
       user_id: value[0],
       user_name: value[1],
     });
+    getSetListData();
   };
 
-  // Return the date for work.
-  const getSetListData = () => {
-    const listData = [
-      {
-        type: 0,
-        day: "2024-05-06",
-      },
-      {
-        type: 1,
-        day: "2024-05-01",
-      },
-      {
-        type: 1,
-        day: "2024-05-02",
-      },
-      {
-        type: 2,
-        day: "2024-05-03",
-      },
-      {
-        type: 2,
-        day: "2024-05-04",
-      },
-      {
-        type: 1,
-        day: "2024-05-05",
-      },
-      {
-        type: 3,
-        day: "2024-05-07",
-      },
-      {
-        type: 3,
-        day: "2024-05-09",
-      },
-    ];
-    return listData || [];
+  // Return the work shift for work.
+  const getSetListData = async () => {
+    try {
+      const date = selectDate.format("YYYY-MM-DD");
+      const response = await getDailyWorkShift({
+        practId: selectUser.user_id,
+        workDate: date,
+      });
+      if (response.resultCode === 200) {
+        console.log("response.data", response.data);
+        setListData(response.data);
+      }
+    } catch (error) {
+      Modal.error({
+        title: "Error",
+        content: error.message,
+      });
+    }
   };
 
-  const setDay = useMemo(() => {
+  const setDay = () => {
     // Find if the user has a schedule on the day
     return (value) => {
       const dateString = dayjs(value.$d).format("YYYY-MM-DD");
       for (let item of listData) {
-        if (item.day === dateString) {
-          switch (item.type) {
+        if (item.workDate === dateString) {
+          switch (item.shiftType) {
             case 1:
               return (
                 <div
@@ -136,17 +125,20 @@ const WorkShift = () => {
       }
       return <></>;
     };
-  }, [listData]);
+  };
+
+  const navigate = useNavigate();
 
   useEffect(() => {
-    setListData(getSetListData());
     if (selectUser) {
       setSelectDate(dayjs(today));
       setWorkTime(1);
+      //   getSetListData();
     }
     practitionerList();
   }, [selectUser]);
 
+  // Select the date of the work shift.
   const handleDateChange = (value) => {
     setSelectDate(dayjs(value));
     if (
@@ -157,9 +149,9 @@ const WorkShift = () => {
     } else {
       setDisabledDate(false);
     }
-    console.log("handleDateChange", dayjs(value).format("YYYY-MM-DD"));
   };
 
+  // Get the list of practitioners when the page is loaded.
   const practitionerList = async () => {
     const { data } = await getEmployeeList();
     const options = data.map((item) => ({
@@ -170,15 +162,39 @@ const WorkShift = () => {
     console.log("options", options);
   };
 
+  // Click the confirm button to submit the work shift.
   const submitWorkShift = async () => {
-    const workShiftData = {
-      adminId: "m5x1utQt", // remember to change, should get from header
-      practId: selectUser.user_id,
-      workDate: dayjs(selectDate.$d).format("YYYY-MM-DD"),
-      shiftType: workTime,
-    };
-    await createWorkShift(workShiftData);
-    navigate("/schedule");
+    const adminId = (axios.defaults.headers["admin-id"] =
+      store.getState()?.globalSlice.adminId);
+    try {
+      const response = await createWorkShift({
+        adminId,
+        practId: selectUser.user_id,
+        workDate: dayjs(selectDate.$d).format("YYYY-MM-DD"),
+        shiftType: workTime,
+      });
+      if (response.resultCode === 200) {
+        Modal.success({
+          title: "Success",
+          content: "Reject submitted.",
+          onOk: () => {
+            navigate("/work-shift");
+          },
+        });
+      }
+    } catch (error) {
+      console.log(
+        "submitWorkShift",
+        adminId,
+        selectUser.user_id,
+        dayjs(selectDate.$d).format("YYYY-MM-DD"),
+        workTime
+      );
+      Modal.error({
+        title: "Error",
+        content: error.message,
+      });
+    }
   };
 
   return (
@@ -210,7 +226,6 @@ const WorkShift = () => {
             HeaderRender={({ value }) => {
               // 确保 value 是 Day.js 对象
               const currentValue = dayjs(value);
-
               const months = [];
               for (let i = 0; i < 12; i++) {
                 months.push(currentValue.month(i).format("MMM"));
