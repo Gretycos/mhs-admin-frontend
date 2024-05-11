@@ -138,6 +138,10 @@ const WorkShift = () => {
     practitionerList();
   }, [selectUser]);
 
+  useEffect(() => {
+    getSetListData();
+  }, []);
+
   // Select the date of the work shift.
   const handleDateChange = (value) => {
     setSelectDate(dayjs(value));
@@ -176,7 +180,7 @@ const WorkShift = () => {
       if (response.resultCode === 200) {
         Modal.success({
           title: "Success",
-          content: "Reject submitted.",
+          content: "Work shift submitted",
           onOk: () => {
             navigate("/work-shift");
           },

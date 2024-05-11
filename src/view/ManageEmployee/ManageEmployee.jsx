@@ -10,6 +10,7 @@ import {
   Image,
   Upload,
   message,
+  Modal,
 } from "antd";
 import { Link } from "react-router-dom";
 import dayjs from "dayjs";
@@ -17,7 +18,10 @@ import React, { useState, useEffect } from "react";
 import { UploadOutlined } from "@ant-design/icons";
 import IntroBar from "@/component/IntroBar/IntroBar.jsx";
 const { Column, ColumnGroup } = Table;
-import { getEmployeeList } from "@/service/user/admin.js";
+import { getEmployeeList, addEmployee } from "@/service/user/admin.js";
+import md5 from "js-md5";
+import { useNavigate } from "react-router-dom";
+
 const dateFormat = "YYYY-MM-DD";
 
 const columns = [
@@ -101,19 +105,17 @@ const dataEdit = {
   id: "jb1023w",
 };
 
-const genderOption = [
-  {
-    value: 1,
-    label: "female",
-  },
-  {
-    value: 0,
-    label: "male",
-  },
-  {
-    value: 1,
-    label: "other",
-  },
+// column option fot gender and position
+const genderOpt = [
+  { value: 1, label: "female" },
+  { value: 0, label: "male" },
+];
+
+const positionOpt = [
+  { value: 0, label: "Doctor" },
+  { value: 1, label: "Test" },
+  { value: 2, label: "Nurse" },
+  { value: 3, label: "Else" },
 ];
 
 const EditEmployee = () => {
@@ -153,7 +155,7 @@ const EditEmployee = () => {
           <div className="form-items">
             <Form.Item
               name={["user", "first-name"]}
-              label="First Name"
+              label="Given Name"
               rules={[{ required: true }]}
               initialValue={dataEdit.firstName}
             >
@@ -161,7 +163,7 @@ const EditEmployee = () => {
             </Form.Item>
             <Form.Item
               name={["user", "last-name"]}
-              label="Last Name"
+              label="Family Name"
               rules={[{ required: true }]}
               initialValue={dataEdit.lastName}
             >
@@ -170,7 +172,7 @@ const EditEmployee = () => {
             <Form.Item
               name={["user", "email"]}
               label="Email"
-              rules={[{ type: "email" }]}
+              rules={[{ required: true, type: "email" }]}
               initialValue={dataEdit.email}
             >
               <Input />
@@ -178,7 +180,6 @@ const EditEmployee = () => {
             <Form.Item
               name={["user", "phone"]}
               label="phone"
-              rules={[{ type: "number" }]}
               initialValue={dataEdit.phone}
             >
               <Input />
@@ -186,17 +187,23 @@ const EditEmployee = () => {
             <Form.Item
               name={["user", "gender"]}
               label="Gender"
-              // rules={[{ type: "number", min: 0, max: 120 }]}
+              rules={[{ required: true }]}
               initialValue={dataEdit.gender}
             >
-              <Select defaultvalue={dataEdit.gender} options={genderOption} />
+              <Select defaultvalue={dataEdit.gender} options={genderOpt} />
             </Form.Item>
             <Form.Item
               name={["user", "birth"]}
               label="Birth"
+              rules={[{ required: true }]}
               initialValue={dayjs(dataEdit.birth, dateFormat)}
             >
-              <DatePicker />
+              <DatePicker
+                disabledDate={(current) => {
+                  return current && current >= dayjs().startOf("day");
+                  // Can not select days before today
+                }}
+              />
             </Form.Item>
             <Form.Item
               name={["user", "position"]}
@@ -204,7 +211,7 @@ const EditEmployee = () => {
               // rules={[{ type: "number", min: 0, max: 120 }]}
               initialValue={dataEdit.position}
             >
-              <Select defaultvalue={dataEdit.gender} options={genderOption} />
+              <Select defaultvalue={dataEdit.gender} options={positionOpt} />
             </Form.Item>
             <Form.Item
               name={["user", "home-address"]}
@@ -239,6 +246,158 @@ const EditEmployee = () => {
   );
 };
 
+const AddEmployee = () => {
+  /* eslint-enable no-template-curly-in-string */
+  const navigate = useNavigate();
+  const [submitData, setSubmitData] = useState(null);
+
+  const onFinish = async (values) => {
+    values.user.dateOfBirth =
+      values.user.dateOfBirth.format("DD-MM-YYYY HH:mm");
+    values.user = {
+      ...values.user,
+      password: md5("Aa112233"),
+    };
+    console.log("Received values of form: ", values.user);
+    try {
+      const response = await addEmployee({
+        ...values.user,
+      });
+      console.log("response:", response);
+      if (response.resultCode === 200) {
+        Modal.success({
+          title: "Success",
+          content: "Employee added.",
+          onOk: () => {
+            navigate("/manage-employee");
+          },
+        });
+      }
+      // 处理成功响应
+    } catch (error) {
+      Modal.error({
+        title: "Error",
+        content: error.message,
+      });
+      // 处理错误响应
+    }
+  };
+
+  const now = dayjs();
+
+  const layout = {
+    labelCol: { span: 8 },
+    wrapperCol: { span: 16 },
+  };
+
+  return (
+    <div className="add-page">
+      <p className="title">Add New Employee</p>
+      <Form
+        {...layout}
+        name="nest-messages"
+        onFinish={onFinish}
+        className="employee-info"
+      >
+        <div className="form-items">
+          <Form.Item
+            name={["user", "givenName"]}
+            label="First Name"
+            rules={[
+              {
+                required: true,
+                message: "Please input practitioner's First name!",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name={["user", "familyName"]}
+            label="Last Name"
+            rules={[
+              {
+                required: true,
+                message: "Please input practitioner's Last name!",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name={["user", "email"]}
+            label="Email"
+            rules={[
+              {
+                required: true,
+                type: "email",
+                message: "Please input practitioner's email!",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item name={["user", "mobileNum"]} label="Phone">
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name={["user", "sex"]}
+            label="Gender"
+            rules={[
+              {
+                required: true,
+                message: "Please select practitioner's gender!",
+              },
+            ]}
+          >
+            <Select options={genderOpt} />
+          </Form.Item>
+          <Form.Item
+            name={["user", "dateOfBirth"]}
+            label="Birthday"
+            rules={[
+              {
+                required: true,
+                message: "Please select practitioner's birthday!",
+              },
+            ]}
+          >
+            <DatePicker
+              disabledDate={(current) => {
+                return current && current >= dayjs(now).startOf("day");
+                // Can not select days before today
+              }}
+              style={{ width: "100%" }}
+            />
+          </Form.Item>
+          <Form.Item
+            name={["user", "role"]}
+            label="Position"
+            rules={[
+              {
+                required: true,
+                message: "Please select practitioner's position!",
+              },
+            ]}
+          >
+            <Select options={positionOpt} />
+          </Form.Item>
+        </div>
+
+        <div className="btn-group">
+          <Form.Item wrapperCol={{ ...layout.wrapperCol }} className="btn">
+            {/* <ImageUpload /> */}
+            <Button type="primary" htmlType="submit" className="btn-add">
+              Add employee
+            </Button>
+          </Form.Item>
+        </div>
+      </Form>
+    </div>
+  );
+};
+
+// upload image, future work
 const ImageUpload = () => {
   const [image, setImage] = useState(null);
 
@@ -313,99 +472,6 @@ const ImageUpload = () => {
           Click to Upload
         </Button>
       </Upload>
-    </div>
-  );
-};
-
-const AddEmployee = () => {
-  const validateMessages = {
-    // required: `${label} is required!`,
-    // types: {
-    //   email: `${label} is not a valid email!`,
-    //   number: `${label} is not a valid number!`,
-    // },
-    // number: {
-    //   range: `${label} must be between ${min} and ${max}`,
-    // },
-  };
-  /* eslint-enable no-template-curly-in-string */
-  const onFinish = (values) => {
-    console.log(values);
-  };
-
-  const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 16 },
-  };
-
-  return (
-    <div className="add-page">
-      <p className="title">Add New Employee</p>
-      {/* <div className="employee-img">image</div> */}
-      <Form
-        {...layout}
-        name="nest-messages"
-        onFinish={onFinish}
-        className="employee-info"
-        validateMessages={validateMessages}
-      >
-        <div className="form-items">
-          <Form.Item
-            name={["user", "first-name"]}
-            label="First Name"
-            rules={[{ required: true }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name={["user", "last-name"]}
-            label="Last Name"
-            rules={[{ required: true }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name={["user", "email"]}
-            label="Email"
-            rules={[{ type: "email" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name={["user", "phone"]}
-            label="phone"
-            rules={[{ type: "number" }]}
-            // initialValue={dataEdit.phone}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item name={["user", "gender"]} label="Gender">
-            <Select options={genderOption} />
-          </Form.Item>
-          <Form.Item name={["user", "birth"]} label="Birth">
-            <DatePicker />
-          </Form.Item>
-          <Form.Item name={["user", "position"]} label="position">
-            <Select options={genderOption} />
-          </Form.Item>
-          <Form.Item
-            name={["user", "home-address"]}
-            label="Address"
-            initialValue={dataEdit.address}
-          >
-            <Input.TextArea />
-          </Form.Item>
-        </div>
-
-        <div className="btn-group">
-          <Form.Item wrapperCol={{ ...layout.wrapperCol }} className="btn">
-            {/* <ImageUpload /> */}
-            <Button type="primary" htmlType="submit" className="btn-add">
-              Add employee
-            </Button>
-          </Form.Item>
-        </div>
-      </Form>
     </div>
   );
 };
