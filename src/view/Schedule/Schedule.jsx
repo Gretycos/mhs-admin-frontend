@@ -4,18 +4,18 @@ import IntroBar from "@/component/IntroBar/IntroBar.jsx";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import dayjs from "dayjs";
+import { getEveryoneWorkShiftByDate } from "@/service/user/admin.js";
 
 const Schedule = () => {
+  // define the columns of the table
   const columns = [
     {
       title: "Practitioner Name",
+      width: "200px",
       dataIndex: "name",
       key: "name",
       fixed: "left",
     },
-  ];
-
-  columns.push(
     {
       title: `morning`,
       width: "100px",
@@ -41,6 +41,18 @@ const Schedule = () => {
         ),
     },
     {
+      title: `all day`,
+      width: "200px",
+      key: `dayOff`,
+      align: "-webkit-center",
+      render: (record) =>
+        record[`workShift`] === "AllDay" ? (
+          <div className="custom-cell"></div>
+        ) : (
+          <></>
+        ),
+    },
+    {
       title: `day off`,
       width: "200px",
       key: `dayOff`,
@@ -51,30 +63,71 @@ const Schedule = () => {
         ) : (
           <></>
         ),
-    }
-  );
+    },
+  ];
 
-  const userData = [];
-  for (let i = 0; i < 100; i++) {
-    userData.push({
-      key: i,
-      name: `Edward ${i}`,
-      hour10: true,
-      address: `London Park no. ${i}`,
-      userid: "P01234x",
-      workShift: "morning",
-    });
-  }
+  // columns.push();
 
   const now = dayjs();
   const start = now.subtract(7, "day");
   const end = now.add(7, "day");
+  const [selectDate, setSelectDate] = useState(dayjs(now));
+
+  const [workShiftList, setWorkShiftList] = useState([{}]);
+  function getShiftName(shiftType) {
+    switch (shiftType) {
+      case 0:
+        return "morning";
+      case 1:
+        return "afternoon";
+      case 2:
+        return "AllDay";
+      case 3:
+        return "dayOff";
+      default:
+        return "Unknown";
+    }
+  }
+  // get all work shift data group by practitioner and date.
+  const getWorkShiftList = async () => {
+    const date = dayjs(selectDate).format("DD-MM-YYYY");
+    const { data } = await getEveryoneWorkShiftByDate({
+      date, // 0: pending, 1: approved, 2: rejected
+    });
+    const extractedData = data.map((item) => ({
+      key: item.practId,
+      workDate: item.workDate,
+      workShift: getShiftName(item.shiftType),
+      name: item.practName,
+    }));
+    setWorkShiftList(extractedData);
+  };
+
+  const handleDateChange = (value) => {
+    setSelectDate(dayjs(value));
+    console.log("selectDate:", selectDate);
+  };
+
+  useEffect(() => {
+    getWorkShiftList();
+  }, [selectDate]);
+
+  // Used to monitor changes to workShiftList and execute after each update
+  useEffect(() => {}, [workShiftList]);
 
   return (
     <div className="schedule-page">
       <IntroBar title="View All Schedule" />
-      <DatePicker className="date-picker" defaultValue={now} />
-      <Table className="table-day" columns={columns} dataSource={userData} />
+      <DatePicker
+        onChange={handleDateChange}
+        className="date-picker"
+        value={selectDate}
+      />
+      <Table
+        className="table-day"
+        columns={columns}
+        dataSource={workShiftList}
+      />
     </div>
   );
 };

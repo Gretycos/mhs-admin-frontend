@@ -52,6 +52,10 @@ export const getEmployeeList = (params) => {
     return axios.get(PREFIX_EMP + '/viewAll', {params})
 }
 
+export const addEmployee = (params) => {
+    return axios.post(PREFIX_EMP + '/create', params)
+}
+
 
 // Work Shift
 const PREFIX_SHIFT = '/workShift'
@@ -61,6 +65,10 @@ export const createWorkShift = (params) => {
 
 export const getDailyWorkShift = (params) => {
     return axios.get(PREFIX_SHIFT + '/personalWorkShift', {params})
+}
+
+export const getEveryoneWorkShiftByDate = (params) => { 
+    return axios.get(PREFIX_SHIFT + '/selectAll', {params})
 }
 
 

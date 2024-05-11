@@ -64,6 +64,7 @@ const Request = () => {
       <Table dataSource={reqList} columns={columns} className="request-table" />
     </div>
   );
+  
 };
 
 const RequestDetail = () => {
