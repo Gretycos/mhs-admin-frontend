@@ -42,7 +42,7 @@ const Schedule = () => {
     },
     {
       title: `all day`,
-      width: "200px",
+      width: "100px",
       key: `dayOff`,
       align: "-webkit-center",
       render: (record) =>
