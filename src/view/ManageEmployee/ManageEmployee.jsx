@@ -12,15 +12,19 @@ import {
   message,
   Modal,
 } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import React, { useState, useEffect } from "react";
 import { UploadOutlined } from "@ant-design/icons";
 import IntroBar from "@/component/IntroBar/IntroBar.jsx";
-const { Column, ColumnGroup } = Table;
-import { getEmployeeList, addEmployee } from "@/service/user/admin.js";
+import {
+  getEmployeeList,
+  addEmployee,
+  getEmployeeInfo,
+  updateEmployee,
+  deleteEmployee,
+} from "@/service/user/admin.js";
 import md5 from "js-md5";
-import { useNavigate } from "react-router-dom";
 
 const dateFormat = "YYYY-MM-DD";
 
@@ -29,7 +33,9 @@ const columns = [
     title: "Practitioner Name",
     dataIndex: "name",
     width: 200,
-    render: (text, record) => <Link to={`/request/${record.id}`}>{text}</Link>,
+    render: (text, record) => (
+      <Link to={`/manage-employee/edit/${record.id}`}>{text}</Link>
+    ),
   },
   {
     title: "Email",
@@ -52,13 +58,6 @@ const columns = [
     dataIndex: "position",
   },
 ];
-
-const positionOption = {
-  0: "Doctor",
-  1: "Test",
-  2: "Nurse",
-  3: "Else",
-};
 
 const ManageEmployee = () => {
   const [employeeList, setEmployeeList] = useState([{}]);
@@ -92,25 +91,13 @@ const ManageEmployee = () => {
   );
 };
 
-const dataEdit = {
-  key: "1",
-  firstName: "John",
-  lastName: "Brown",
-  address: "New York No. 1 Lake Park",
-  email: "jb32k@soton.mhs.uk",
-  phone: "07442933210",
-  position: "Doctor",
-  gender: "Female",
-  birth: "1999-12-12",
-  id: "jb1023w",
-};
-
 // column option fot gender and position
 const genderOpt = [
   { value: 1, label: "female" },
   { value: 0, label: "male" },
 ];
 
+// Map jobs return for the back end
 const positionOpt = [
   { value: 0, label: "Doctor" },
   { value: 1, label: "Test" },
@@ -118,21 +105,95 @@ const positionOpt = [
   { value: 3, label: "Else" },
 ];
 
+// Map jobs displayed on the front end
+const positionOption = {
+  0: "Doctor",
+  1: "Test",
+  2: "Nurse",
+  3: "Else",
+};
+
 const EditEmployee = () => {
-  const validateMessages = {
-    // required: `${label} is required!`,
-    // types: {
-    //   email: `${label} is not a valid email!`,
-    //   number: `${label} is not a valid number!`,
-    // },
-    // number: {
-    //   range: `${label} must be between ${min} and ${max}`,
-    // },
+  const [dataEdit, setDataEdit] = useState({});
+  const { id } = useParams();
+  const [form] = Form.useForm();
+  const now = dayjs();
+  const navigate = useNavigate();
+  const onFinish = async (values) => {
+    values.user.dateOfBirth =
+      values.user.dateOfBirth.format("DD-MM-YYYY HH:mm");
+    values.user.practId = id;
+    console.log("Received values of form: ", values.user);
+    try {
+      const response = await updateEmployee({
+        ...values.user,
+      });
+      console.log("response:", response);
+      if (response.resultCode === 200) {
+        Modal.success({
+          title: "Success",
+          content: "Employee information updated.",
+          onOk: () => {
+            navigate("/manage-employee");
+          },
+        });
+      }
+      // 处理成功响应
+    } catch (error) {
+      Modal.error({
+        title: "Error",
+        content: error.message,
+      });
+      // 处理错误响应
+    }
   };
-  /* eslint-enable no-template-curly-in-string */
-  const onFinish = (values) => {
-    console.log(values);
+
+  const getEditData = async () => {
+    const { data } = await getEmployeeInfo({ userId: id });
+    setDataEdit(data);
+    form.setFieldsValue({
+      user: {
+        givenName: data.givenName,
+        familyName: data.familyName,
+        email: data.email,
+        // mobileNum: data.phone,
+        dateOfBirth: dayjs(data.dateOfBirth),
+        role: data.role,
+        sex: data.sex,
+      },
+    });
   };
+
+  const deleteUser = async () => {
+    console.log("delete user", id);
+    try {
+      const response = await deleteEmployee({
+        practId: id,
+      });
+      if (response.resultCode === 200) {
+        Modal.success({
+          title: "Success",
+          content: "Employee deleted.",
+          onOk: () => {
+            navigate("/manage-employee");
+          },
+        });
+      }
+    } catch (error) {
+      Modal.error({
+        title: "Error",
+        content: error.message,
+      });
+    }
+  };
+
+  useEffect(() => {
+    getEditData();
+  }, []);
+
+  useEffect(() => {
+    console.log("dataEdit:", dataEdit);
+  }, [dataEdit]);
 
   const layout = {
     labelCol: { span: 8 },
@@ -140,85 +201,100 @@ const EditEmployee = () => {
   };
 
   return (
-    <div className="manage-employee-page">
+    <div className="edit-employee-page">
       <IntroBar title="Edit | Delete Employee" />
       {/* <div className="employee-img">image</div> */}
       <div className="edit-page">
         <Form
+          form={form}
           {...layout}
           name="nest-messages"
           onFinish={onFinish}
-          style={{ maxWidth: 600 }}
+          style={{ maxWidth: 500 }}
           className="employee-info"
-          validateMessages={validateMessages}
         >
           <div className="form-items">
             <Form.Item
-              name={["user", "first-name"]}
-              label="Given Name"
-              rules={[{ required: true }]}
-              initialValue={dataEdit.firstName}
+              name={["user", "givenName"]}
+              label="First Name"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input practitioner's First name!",
+                },
+              ]}
             >
               <Input />
             </Form.Item>
             <Form.Item
-              name={["user", "last-name"]}
-              label="Family Name"
-              rules={[{ required: true }]}
-              initialValue={dataEdit.lastName}
+              name={["user", "familyName"]}
+              label="Last Name"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input practitioner's Last name!",
+                },
+              ]}
             >
               <Input />
             </Form.Item>
             <Form.Item
               name={["user", "email"]}
               label="Email"
-              rules={[{ required: true, type: "email" }]}
-              initialValue={dataEdit.email}
+              rules={[
+                {
+                  required: true,
+                  type: "email",
+                  message: "Please input practitioner's email!",
+                },
+              ]}
             >
               <Input />
             </Form.Item>
-            <Form.Item
-              name={["user", "phone"]}
-              label="phone"
-              initialValue={dataEdit.phone}
-            >
+            {/* <Form.Item name={["user", "mobileNum"]} label="Phone">
               <Input />
-            </Form.Item>
+            </Form.Item> */}
             <Form.Item
-              name={["user", "gender"]}
+              name={["user", "sex"]}
               label="Gender"
-              rules={[{ required: true }]}
-              initialValue={dataEdit.gender}
+              rules={[
+                {
+                  required: true,
+                  message: "Please select practitioner's gender!",
+                },
+              ]}
             >
-              <Select defaultvalue={dataEdit.gender} options={genderOpt} />
+              <Select options={genderOpt} />
             </Form.Item>
             <Form.Item
-              name={["user", "birth"]}
-              label="Birth"
-              rules={[{ required: true }]}
-              initialValue={dayjs(dataEdit.birth, dateFormat)}
+              name={["user", "dateOfBirth"]}
+              label="Birthday"
+              rules={[
+                {
+                  required: true,
+                  message: "Please select practitioner's birthday!",
+                },
+              ]}
             >
               <DatePicker
                 disabledDate={(current) => {
-                  return current && current >= dayjs().startOf("day");
+                  return current && current >= dayjs(now).startOf("day");
                   // Can not select days before today
                 }}
+                style={{ width: "100%" }}
               />
             </Form.Item>
             <Form.Item
-              name={["user", "position"]}
-              label="position"
-              // rules={[{ type: "number", min: 0, max: 120 }]}
-              initialValue={dataEdit.position}
+              name={["user", "role"]}
+              label="Position"
+              rules={[
+                {
+                  required: true,
+                  message: "Please select practitioner's position!",
+                },
+              ]}
             >
-              <Select defaultvalue={dataEdit.gender} options={positionOpt} />
-            </Form.Item>
-            <Form.Item
-              name={["user", "home-address"]}
-              label="Home Address"
-              initialValue={dataEdit.address}
-            >
-              <Input.TextArea />
+              <Select options={positionOpt} />
             </Form.Item>
           </div>
 
@@ -227,8 +303,8 @@ const EditEmployee = () => {
               wrapperCol={{ ...layout.wrapperCol, offset: 8 }}
               className="btn"
             >
-              <Button type="primary" htmlType="submit">
-                Save
+              <Button type="default" onClick={deleteUser}>
+                Delete
               </Button>
             </Form.Item>
             <Form.Item
@@ -236,7 +312,7 @@ const EditEmployee = () => {
               className="btn"
             >
               <Button type="primary" htmlType="submit">
-                Delete
+                Save
               </Button>
             </Form.Item>
           </div>
@@ -249,7 +325,6 @@ const EditEmployee = () => {
 const AddEmployee = () => {
   /* eslint-enable no-template-curly-in-string */
   const navigate = useNavigate();
-  const [submitData, setSubmitData] = useState(null);
 
   const onFinish = async (values) => {
     values.user.dateOfBirth =

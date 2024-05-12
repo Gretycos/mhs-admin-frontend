@@ -56,6 +56,17 @@ export const addEmployee = (params) => {
     return axios.post(PREFIX_EMP + '/create', params)
 }
 
+export const getEmployeeInfo = (params) => {
+    return axios.get(PREFIX_EMP + '/info', {params})
+}
+
+export const updateEmployee = (params) => {
+    return axios.put(PREFIX_EMP + '/update', params)
+}
+
+export const deleteEmployee = (params) => {
+    return axios.put(PREFIX_EMP + '/delete', null,{params})
+}
 
 // Work Shift
 const PREFIX_SHIFT = '/workShift'
@@ -71,5 +82,7 @@ export const getEveryoneWorkShiftByDate = (params) => {
     return axios.get(PREFIX_SHIFT + '/selectAll', {params})
 }
 
-
-
+// GET 使用的是 params, 第二个参数传 {params}
+// PUT 使用的是 params 而不是 body時, 第二个参数需传 null, 第三个参数传 {params}
+// PUT 如果使用的是 Body, 第二个参数需传 params
+// POST 使用的是 body, 则第二个参数传 params 
