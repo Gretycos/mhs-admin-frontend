@@ -52,18 +52,18 @@ const Schedule = () => {
           <></>
         ),
     },
-    {
-      title: `day off`,
-      width: "200px",
-      key: `dayOff`,
-      align: "-webkit-center",
-      render: (record) =>
-        record[`workShift`] === "dayOff" ? (
-          <div className="custom-cell"></div>
-        ) : (
-          <></>
-        ),
-    },
+    // {
+    //   title: `day off`,
+    //   width: "200px",
+    //   key: `dayOff`,
+    //   align: "-webkit-center",
+    //   render: (record) =>
+    //     record[`workShift`] === "dayOff" ? (
+    //       <div className="custom-cell"></div>
+    //     ) : (
+    //       <></>
+    //     ),
+    // },
   ];
 
   // columns.push();

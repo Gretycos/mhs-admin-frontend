@@ -46,6 +46,10 @@ export const approveRegister = (params) => {
     return axios.put(PREFIX_REQ + '/approve', null, {params})
 }
 
+export const getRegisteringNumber = (params) => { 
+    return axios.get(PREFIX_REQ + '/countRegister', {params})
+}
+
 // Manage Employee
 const PREFIX_EMP = '/practitioner'
 export const getEmployeeList = (params) => { 
@@ -66,6 +70,10 @@ export const updateEmployee = (params) => {
 
 export const deleteEmployee = (params) => {
     return axios.put(PREFIX_EMP + '/delete', null,{params})
+}
+
+export const getEmployeeNumber = (params) => { 
+    return axios.get(PREFIX_EMP + '/countPractitionersRole', {params})
 }
 
 // Work Shift

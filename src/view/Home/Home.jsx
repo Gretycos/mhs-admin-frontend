@@ -6,29 +6,49 @@ import { App, Button, Card, Statistic, Row, Col } from "antd";
 import IntroBar from "@/component/IntroBar/IntroBar.jsx";
 import { Link } from "react-router-dom";
 import "./Home.less";
+import {
+  getRegisteringNumber,
+  getEmployeeNumber,
+} from "@/service/user/admin.js";
+import { useState, useEffect } from "react";
 
 const Home = () => {
-  const { message } = App.useApp();
-  const handleAlert = () => {
-    message.success("clicked", 2);
-  };
-  const user_data = {
-    total_user: 17,
-    apply_user: 1,
+  const [applyUser, setApplyUser] = useState(0);
+  const [practNum, setPractNum] = useState({
+    Doctor: 0,
+    Nurse: 0,
+    Tester: 0,
+    Other: 0,
+  });
+
+  const getRequestNumber = async () => {
+    const { data } = await getRegisteringNumber();
+    setApplyUser(data);
   };
 
-  const practitioner_data = {
-    total_cnt: 5,
-    new_join: 1,
-    gender: {
-      f: 2,
-      m: 3,
-    },
-    position: {
-      doctor: 3,
-      nurse: 2,
-    },
+  const practRole = {
+    0: "Doctor",
+    1: "Nurse",
+    2: "Tester",
+    3: "Other",
   };
+
+  const getPractitionerNumber = async () => {
+    const { data } = await getEmployeeNumber();
+    setPractNum({
+      Doctor: data.filter((item) => item.role === 0)[0].number,
+      Nurse: data.filter((item) => item.role === 1)[0].number,
+      Tester: data.filter((item) => item.role === 2)[0].number,
+      Other: data.filter((item) => item.role === 3)[0].number,
+    });
+  };
+
+  useEffect(() => {
+    getRequestNumber();
+    getPractitionerNumber();
+  }, []);
+
+  useEffect(() => {}, [applyUser, practNum]);
 
   return (
     <div className="home-pg">
@@ -43,7 +63,7 @@ const Home = () => {
         >
           <Row gutter={16}>
             <Col span={12}>
-              <Statistic title="Applying" value={user_data.apply_user} />
+              <Statistic title="Applying" value={applyUser} />
               <Button
                 style={{
                   marginTop: 16,
@@ -68,7 +88,29 @@ const Home = () => {
         >
           <Row gutter={16}>
             <Col span={12}>
-              <Statistic title="New Join" value={practitioner_data.new_join} />
+              <div className="position">
+                <Statistic
+                  title="Doctor"
+                  value={practNum.Doctor}
+                  className="item"
+                />
+                <Statistic
+                  title="Nurse"
+                  value={practNum.Nurse}
+                  className="item"
+                />
+                <Statistic
+                  title="Tester"
+                  value={practNum.Tester}
+                  className="item"
+                />
+                <Statistic
+                  title="Other"
+                  value={practNum.Other}
+                  className="item"
+                />
+              </div>
+
               <Button
                 style={{
                   marginTop: 16,
