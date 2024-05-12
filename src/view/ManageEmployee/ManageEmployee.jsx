@@ -412,9 +412,9 @@ const AddEmployee = () => {
           >
             <Input />
           </Form.Item>
-          <Form.Item name={["user", "mobileNum"]} label="Phone">
+          {/* <Form.Item name={["user", "mobileNum"]} label="Phone">
             <Input />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item
             name={["user", "sex"]}
             label="Gender"
