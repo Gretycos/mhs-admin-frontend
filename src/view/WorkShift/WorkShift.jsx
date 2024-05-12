@@ -29,19 +29,22 @@ const { Search } = Input;
 
 const WorkShift = () => {
   const [options, setOptions] = useState([]);
-  const [workTime, setWorkTime] = useState(1);
+  const [workTime, setWorkTime] = useState(null);
   const [selectUser, setSelectUser] = useState({
     user_id: "",
     user_name: "",
   });
   const [listData, setListData] = useState([]);
   const [disabledDate, setDisabledDate] = useState(false);
+  const [changePanel, setChangePanel] = useState(false);
 
   const today = dayjs().format("YYYY-MM-DD");
   const [selectDate, setSelectDate] = useState(dayjs(today));
 
   const onPanelChange = (value, mode) => {
-    console.log("onPanelChange", value, mode);
+    console.log("onPanelChange", dayjs(value.$d).format("YYYY-MM-DD"), mode);
+    setSelectDate(dayjs(value.$d));
+    setChangePanel(true);
   };
 
   const changeShiftTime = (e) => {
@@ -54,7 +57,6 @@ const WorkShift = () => {
       user_id: value[0],
       user_name: value[1],
     });
-    getSetListData();
   };
 
   // Return the work shift for work.
@@ -77,73 +79,81 @@ const WorkShift = () => {
     }
   };
 
-  const setDay = () => {
+  const setDay = (value) => {
     // Find if the user has a schedule on the day
-    return (value) => {
-      const dateString = dayjs(value.$d).format("YYYY-MM-DD");
-      for (let item of listData) {
-        if (item.workDate === dateString) {
-          switch (item.shiftType) {
-            case 1:
-              return (
-                <div
-                  style={{
-                    backgroundColor: "green",
-                    borderRadius: "50%",
-                    width: "10px",
-                    height: "10px",
-                    margin: "3px auto",
-                  }}
-                ></div>
-              );
-            case 2:
-              return (
-                <div
-                  style={{
-                    backgroundColor: "blue",
-                    borderRadius: "50%",
-                    width: "10px",
-                    height: "10px",
-                    margin: "3px auto",
-                  }}
-                ></div>
-              );
-            case 3:
-              return (
-                <div
-                  style={{
-                    backgroundColor: "orange",
-                    borderRadius: "50%",
-                    width: "10px",
-                    height: "10px",
-                    margin: "3px auto",
-                  }}
-                ></div>
-              );
-          }
-        }
+    if (listData.length === 0) return <></>;
+    const dateString = dayjs(value.$d).format("YYYY-MM-DD");
+    var arrayObj = new Set(); // 判斷是否有當天的排班 如果0, 1都存在則顯示2
+
+    for (let item of listData) {
+      if (item.workDate === dateString) {
+        arrayObj.add(item.shiftType);
       }
-      return <></>;
-    };
+    }
+
+    if (arrayObj.has(0) && arrayObj.has(1)) {
+      return (
+        <div
+          style={{
+            backgroundColor: "orange",
+            borderRadius: "50%",
+            width: "10px",
+            height: "10px",
+            margin: "3px auto",
+          }}
+        ></div>
+      );
+    } else if (arrayObj.has(0)) {
+      return (
+        <div
+          style={{
+            backgroundColor: "green",
+            borderRadius: "50%",
+            width: "10px",
+            height: "10px",
+            margin: "3px auto",
+          }}
+        ></div>
+      );
+    } else if (arrayObj.has(1)) {
+      return (
+        <div
+          style={{
+            backgroundColor: "blue",
+            borderRadius: "50%",
+            width: "10px",
+            height: "10px",
+            margin: "3px auto",
+          }}
+        ></div>
+      );
+    }
+    return <></>;
   };
 
   const navigate = useNavigate();
 
   useEffect(() => {
     if (selectUser) {
+      getSetListData();
       setSelectDate(dayjs(today));
-      setWorkTime(1);
-      //   getSetListData();
+      setWorkTime(null);
     }
     practitionerList();
   }, [selectUser]);
 
   useEffect(() => {
-    getSetListData();
-  }, []);
+    if (changePanel) {
+      getSetListData();
+      setChangePanel(false);
+    }
+  }, [changePanel]);
 
   // Select the date of the work shift.
   const handleDateChange = (value) => {
+    if (dayjs(value).M != selectDate.$M) {
+      setChangePanel(true);
+    }
     setSelectDate(dayjs(value));
     if (
       (value && value > dayjs().endOf("day").add(60, "day")) ||
@@ -163,7 +173,6 @@ const WorkShift = () => {
       label: item.givenName + " " + item.familyName,
     }));
     setOptions(options);
-    console.log("options", options);
   };
 
   // Click the confirm button to submit the work shift.
@@ -182,7 +191,8 @@ const WorkShift = () => {
           title: "Success",
           content: "Work shift submitted",
           onOk: () => {
-            navigate("/work-shift");
+            getSetListData();
+            setWorkTime(null);
           },
         });
       }
@@ -342,10 +352,10 @@ const WorkShift = () => {
                   : disabledDate
               }
             >
-              <Radio value={1}>Morning (8:00am - 12:00pm)</Radio>
-              <Radio value={2}>Afternoon (12:00pm - 17:00pm)</Radio>
-              <Radio value={3}>All Day (8:00am - 17:00pm)</Radio>
-              <Radio value={4}>Day Off</Radio>
+              <Radio value={0}>Morning (8:00am - 12:00pm)</Radio>
+              <Radio value={1}>Afternoon (12:00pm - 17:00pm)</Radio>
+              <Radio value={2}>All Day (8:00am - 17:00pm)</Radio>
+              <Radio value={3}>Day Off</Radio>
             </Radio.Group>
             <Button
               type="primary"

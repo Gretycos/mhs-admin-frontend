@@ -43,13 +43,11 @@ const Home = () => {
         >
           <Row gutter={16}>
             <Col span={12}>
-              <Statistic title="Active" value={user_data.total_user} />
-            </Col>
-            <Col span={12}>
               <Statistic title="Applying" value={user_data.apply_user} />
               <Button
                 style={{
                   marginTop: 16,
+                  marginLeft: 120,
                 }}
                 type="primary"
               >
@@ -70,13 +68,11 @@ const Home = () => {
         >
           <Row gutter={16}>
             <Col span={12}>
-              <Statistic title="Total" value={practitioner_data.total_cnt} />
-            </Col>
-            <Col span={12}>
               <Statistic title="New Join" value={practitioner_data.new_join} />
               <Button
                 style={{
                   marginTop: 16,
+                  marginLeft: 160,
                 }}
                 type="primary"
               >
