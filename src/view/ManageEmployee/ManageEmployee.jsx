@@ -68,7 +68,7 @@ const ManageEmployee = () => {
       id: item.practId,
       name: item.givenName + " " + item.familyName,
       email: item.email,
-      sex: item.sex === 0 ? "female" : "male",
+      sex: item.sex === 0 ? "male" : "female",
       position: positionOption[item.role],
       birth: dayjs(item.dateOfBirth).format("DD/MM/YYYY"),
     }));
@@ -249,7 +249,7 @@ const EditEmployee = () => {
                 },
               ]}
             >
-              <Input />
+              <Input disabled/>
             </Form.Item>
             {/* <Form.Item name={["user", "mobileNum"]} label="Phone">
               <Input />
@@ -294,7 +294,7 @@ const EditEmployee = () => {
                 },
               ]}
             >
-              <Select options={positionOpt} />
+              <Select options={positionOpt} disabled/>
             </Form.Item>
           </div>
 

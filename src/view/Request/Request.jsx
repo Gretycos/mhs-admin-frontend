@@ -48,7 +48,7 @@ const Request = () => {
       id: item.reqId,
       name: item.givenName + " " + item.familyName,
       email: item.email,
-      sex: item.sex === 0 ? "female" : "male",
+      sex: item.sex === 0 ? "male" : "female",
       birth: dayjs(item.dateOfBirth).format("DD/MM/YYYY"),
     }));
     setReqList(extractedData);
@@ -64,12 +64,13 @@ const Request = () => {
       <Table dataSource={reqList} columns={columns} className="request-table" />
     </div>
   );
-  
+
 };
 
 const RequestDetail = () => {
   const { id } = useParams(); // 傳入的參數 id
   const [reqDetail, setReqDetail] = useState({});
+  const [haveRej, setHaveRej] = useState(false)
   const getRequestDetail = async () => {
     const { data } = await getRegisterPatientDetails({
       reqId: id,
@@ -85,8 +86,7 @@ const RequestDetail = () => {
   const rejectSubmit = async () => {
     try {
       if (
-        (reqDetail.reason =
-          null || reqDetail.reason === "" || reqDetail.reason === undefined)
+        (reqDetail.reason == null || reqDetail.reason === "" || reqDetail.reason === undefined)
       ) {
         Modal.error({
           title: "Error",
@@ -94,12 +94,14 @@ const RequestDetail = () => {
         });
         return;
       }
-      const response = await rejectRegister({
+      const params = {
         reqId: reqDetail.reqId,
         name: reqDetail.givenName,
         email: reqDetail.email,
         reason: reqDetail.reason,
-      });
+      }
+      // console.log(params)
+      const response = await rejectRegister(params);
       if (response.resultCode === 200) {
         Modal.success({
           title: "Success",
@@ -163,7 +165,7 @@ const RequestDetail = () => {
           </p>
           <p className="item-txt">
             <span>Gender: </span>
-            {reqDetail.sex === 0 ? "Female" : "Male"}
+            {reqDetail.sex === 0 ? "Male" : "Female"}
           </p>
           <p className="item-txt">
             <span>Email: </span>
@@ -197,16 +199,25 @@ const RequestDetail = () => {
               width: 350,
               height: 200,
             }}
-            onBlur={(e) => {
+            onChange={(e) => {
               console.log("reason", e.target.value);
-              setReqDetail({ reason: e.target.value, ...reqDetail });
+              setReqDetail({
+                ...reqDetail,
+                reason: e.target.value,
+              });
+              console.log("reason", reqDetail.reason);
+              if (e.target.value.length > 0) {
+                setHaveRej(true)
+              } else {
+                setHaveRej(false)
+              }
             }}
           />
           <div className="check">
             <Button type="default" className="btn" onClick={rejectSubmit}>
               Reject
             </Button>
-            <Button type="primary" className="btn" onClick={approveSubmit}>
+            <Button type="primary" className="btn" onClick={approveSubmit} disabled={haveRej}>
               Confirm
             </Button>
           </div>
