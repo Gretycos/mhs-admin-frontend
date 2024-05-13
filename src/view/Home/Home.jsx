@@ -37,8 +37,8 @@ const Home = () => {
     const { data } = await getEmployeeNumber();
     setPractNum({
       Doctor: data.filter((item) => item.role === 0)[0].number,
-      Nurse: data.filter((item) => item.role === 1)[0].number,
-      Tester: data.filter((item) => item.role === 2)[0].number,
+      Tester: data.filter((item) => item.role === 1)[0].number,
+      Nurse: data.filter((item) => item.role === 2)[0].number,
       Other: data.filter((item) => item.role === 3)[0].number,
     });
   };
